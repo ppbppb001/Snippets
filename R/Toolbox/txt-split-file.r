@@ -1,6 +1,6 @@
-#==================================
-# Split big file into small chunks
-#==================================
+#=========================================================
+# Split a large text file into a number of smaller files
+#========================================================
 
 linesPerChunk <- 500           # lines of each small chunk
 fnIn <- "Test-mix.csv"      # file name of the source file
