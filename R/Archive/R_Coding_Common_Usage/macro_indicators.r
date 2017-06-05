@@ -1,4 +1,4 @@
-setwd("e:/cat/projects/r practice/DIBP")
+setwd("../projects/r practice/DIBP")
 rm(list=ls())
 
 library(ggplot2)
