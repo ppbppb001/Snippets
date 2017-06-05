@@ -95,7 +95,7 @@ while (frleft > 0) {
                            to = "UTF-8")      # convert unicode/utf-16 to utf-8 general string
         } else {
             # Not a line in Unicode:
-            s.str <- iconv(list(s.raw))       # convert raw to string without coding translation
+            s.str <- iconv(list(s.raw))       # convert raw to string without translation
         }
         
         # Write the result to the output file
