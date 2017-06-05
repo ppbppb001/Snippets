@@ -1,5 +1,5 @@
 #------------------------------------------------
-# Convert format of CSV file from utf8/utf16 mixed
+# Convert format of text file from utf8/utf16 mixed
 # format to UTF-8
 #------------------------------------------------
 
