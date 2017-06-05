@@ -1,3 +1,3 @@
 Hi, there!
-Welcome to visit my scratchpad.
+Welcome to my scratchpad.
 Happy coding!
