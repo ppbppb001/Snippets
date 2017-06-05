@@ -1,5 +1,5 @@
 #------------------------------------------------
-# Convert format of TXT file from UTF-16/Unicode
+# Convert format of text file from UTF-16/Unicode
 # to UTF-8
 #------------------------------------------------
 
