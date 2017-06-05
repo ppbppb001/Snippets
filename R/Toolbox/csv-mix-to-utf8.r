@@ -1,14 +1,14 @@
 #------------------------------------------------
-# Convert format of text file from utf8/utf16 mixed
+# Convert format of CSV file from utf8/utf16 mixed
 # format to UTF-8
 #------------------------------------------------
 
 # Input file:
-fnrx <- "Test-Unicode-2gb.csv"   # Name of the file encoded in unicode format
-# fnrx <- "Test-mix.csv"        # Name of the file encoded in mixed format
+fnrx <- "Test-mix-big.csv"    # Name of the file encoded in mixed format
 frx <- file(fnrx, "rb")       # define file object (format=Unicode/UTF-16)
 frsize <- file.size(fnrx)     # get size of the input file
-# frsize <- 1e7               # for TESTing only! limit file size to a given number
+# frsize <- 1e7               # for TESTing only! 
+                              # limit file size to a given number for a test run
 
 # Output file:
 fnwx <- "Output-UTF8.csv"     # name of output file
@@ -31,6 +31,9 @@ frleft <- frsize        # bytes left to be processed
 inpcnt <- 0             # counter of input lines
 outcnt <- 0             # counter of output lines
 in.raw <- as.raw(NULL)  # the buffer holding lines to be processed
+
+# Benchmark: starting point
+tmStart <- proc.time()
 
 # Start the scanning loop: ..............
 while (frleft > 0) {
@@ -58,11 +61,23 @@ while (frleft > 0) {
         
         # Check EOL bytes to see if it is unicode
         if (in.raw[in.eol[i]+1] == 0x00) {
-            isUnicode <- TRUE
-            EOL.size <- 4       # size of EOL of unicode is 4 bytes
-        } else {
-            isUnicode <- FALSE
-            EOL.size <- 2       # size of EOL of utf8 is 2 bytes
+            isUnicode <- TRUE           # is Unicode
+            if (in.raw[in.eol[i]+2] == 0x0a) {
+                if (in.raw[in.eol[i]+3] == 0x00) {
+                    EOL.size <- 4       # 4 bytes EOL: 0x0d,0x00,0x0a,0xaa
+                } else {
+                    EOL.size <- 3       # 3 bytes EOL: 0x0d,0x00,0x0a
+                }
+            } else {
+                EOL.size <- 2
+            }
+        } else { 
+            isUnicode <- FALSE      # not unicode
+            if (in.raw[in.eol[i]+1] == 0x0a){
+                EOL.size <- 2       # 2 bytes EOL: 0x0d,0x0a
+            } else {
+                EOL.size <- 1       # 1 bytes EOL: 0x0d
+            }
         }
         
         # Fetch a line from 'in.raw'
@@ -114,11 +129,13 @@ while (frleft > 0) {
 close(frx)  # close input file
 close(fwx)  # close output file
 
+# Benchmark: save the time when job done
+tmFinish <- proc.time()
 
 
 # Display the statistics:
 cat("# Count of input lines = ", inpcnt, "\n")
 cat("# Count of output lines = ", outcnt, "\n")
 cat("# Count of dropped lines = ", inpcnt - outcnt, "\n")
-
+cat("# Time consumed =", (tmFinish[3] - tmStart[3]), "(s)")
 
