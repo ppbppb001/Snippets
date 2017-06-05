@@ -1,4 +1,4 @@
-setwd('e:/cat/projects/r practice/r_coding_common_usage')
+setwd('../projects/r practice/r_coding_common_usage')
 rm(list=ls())
 
 # call Python from R
