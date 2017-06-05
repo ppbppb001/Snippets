@@ -19,3 +19,6 @@ df <- df0[1:18, c(1,7:10)]
 plot(100*df[1:17,5], df[2:18,3]/1000)  #exchange rate
 # plot(1000*df[1:17,2], df[2:18,3]/1000) #unemployed
 # plot(df[1:17,4]/100, df[2:18,3]/1000) #import export
+
+
+
