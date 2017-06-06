@@ -6,7 +6,7 @@
 #------------------------------------------------
 
 # Input file:
-fnrx <- "Test-mix-big.csv"    # Name of the file encoded in mixed format
+fnrx <- "Test-mix-big.csv"    # Name of the input file
 frx <- file(fnrx, "rb")       # define file object (format=Unicode/UTF-16)
 frsize <- file.size(fnrx)     # get size of the input file
 # frsize <- 1e7               # for TESTing only! 
