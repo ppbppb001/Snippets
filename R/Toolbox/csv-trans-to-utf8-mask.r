@@ -1,6 +1,6 @@
 #------------------------------------------------
 # Translate to UTF-8 encoding format
-#   Version 2
+#   special version
 #   * Mask bit-7(8th) of non-utf16 chars
 #------------------------------------------------
 
