@@ -1,8 +1,7 @@
 #------------------------------------------------
-# Convert format of CSV file from utf8/utf16 mixed
-# format to UTF-8
-#
-# Version-2
+# Translate to UTF-8 encoding format
+#   Version 2
+#   * Mask bit-7(8th) of non-utf16 chars
 #------------------------------------------------
 
 # Input file:
@@ -141,4 +140,6 @@ cat("# Count of input lines = ", inpcnt, "\n")
 cat("# Count of output lines = ", outcnt, "\n")
 cat("# Count of dropped lines = ", inpcnt - outcnt, "\n")
 cat("# Time consumed =", (tmFinish[3] - tmStart[3]), "(s)")
+
+
 
