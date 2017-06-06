@@ -12,7 +12,7 @@ frsize <- file.size(fnr)      # get size of the input file
 # limit file size to a given number for a test run
 
 # Output file:
-fnw <- "Output-UTF8-v2.csv"   # name of output file
+fnw <- "Output-UTF8-mask.csv"   # name of output file
 fw <- file(fnw, "w")          # define file object
 
 # Define key const:
