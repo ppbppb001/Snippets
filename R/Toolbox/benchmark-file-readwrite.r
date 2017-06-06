@@ -49,6 +49,6 @@ close(fr)
 
 tmFinish <- proc.time()  # time when finish
 cat("### Line count =", lineCount)
-cat("### Writing Test: Time consumed =", (tmFinish[3] - tmStart[3]), "(s)")
+cat("### Reading Test: Time consumed =", (tmFinish[3] - tmStart[3]), "(s)")
 
 
