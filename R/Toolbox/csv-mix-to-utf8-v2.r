@@ -6,15 +6,15 @@
 #------------------------------------------------
 
 # Input file:
-fnrx <- "Test-mix-big.csv"    # Name of the input file
-frx <- file(fnrx, "rb")       # define file object (format=Unicode/UTF-16)
-frsize <- file.size(fnrx)     # get size of the input file
+fnr <- "Test-mix-big.csv"     # Name of the input file
+fr <- file(fnr, "rb")         # define file object (format=Unicode/UTF-16)
+frsize <- file.size(fnr)      # get size of the input file
 # frsize <- 1e7               # for TESTing only! 
 # limit file size to a given number for a test run
 
 # Output file:
-fnwx <- "Output-UTF8.csv"     # name of output file
-fwx <- file(fnwx, "w")        # define file object
+fnw <- "Output-UTF8-v2.csv"   # name of output file
+fw <- file(fnw, "w")          # define file object
 
 # Define key const:
 chunksize <- 5e8              # block size of reading = 500MB
@@ -41,7 +41,7 @@ tmStart <- proc.time()
 while (frleft > 0) {
     
     # Read a chunk of raw data from the input file
-    in.buf <- readBin(frx,
+    in.buf <- readBin(fr,
                       what = "raw",
                       n = chunksize,
                       size = 1)  # read raw data into temporary buffer 'in.buf'
@@ -103,7 +103,7 @@ while (frleft > 0) {
         
         # Write the result to the output file
         if ((length(s.str) > 0) && (!is.na(s.str))) {  # check result of conversion
-            writeLines(s.str, fwx)        # write the utf-8 string to output file
+            writeLines(s.str, fw)        # write the utf-8 string to output file
             outcnt <- outcnt + 1
         }
     }
@@ -129,8 +129,8 @@ while (frleft > 0) {
 }
 
 # Close the opened files:
-close(frx)  # close input file
-close(fwx)  # close output file
+close(fr)  # close input file
+close(fw)  # close output file
 
 # Benchmark: save the time when job done
 tmFinish <- proc.time()
