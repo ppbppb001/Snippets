@@ -2,7 +2,7 @@ Hi, there!
 Welcome to my scratchpad.
 Happy coding!
 
-# [2017-06-06 15:49]
+<h5>[2017-06-06 15:49]</h5><br>
 New text format conversion tool for csv file has been uploaded. <br>
 [File path]: snippets/r/toolbox/csv-mix-to-utf8-v2.r <br>
 [Features]:
