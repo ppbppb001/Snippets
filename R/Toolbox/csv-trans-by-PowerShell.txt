@@ -1,0 +1,21 @@
+Windows Powershell is a powerful console interface with a looking like traditional DOS terminal
+
+1) Launch PowerShell
+   Method-1: 
+     a. Press 'Windows Key' + 'R' together.  ('Windows Key' is the key with a mark pattern like 'frame of a window')
+     b. In the pop-up windows after 'Run' prompt, input "powershell" and press 'OK' or ENTER key
+   Method-2:
+     a. Click Windows Start icon (the big icon at the left-bottom corner of desktop)
+     b. Choose Run 
+     c. follow the instruction in (Method-2.b)
+   When PowerShell is launched successfully, a DOS terminal like window will pop up.
+   
+ 2) PowerShell: change current directory to your R working directory
+    Using "cd" command to change current directory:
+      For example, there is a R working directory like "d:\myworks", then in powershell type "cd d:\myworks"
+      
+ 3) PowerShell: re-encode CSV file
+    Suppose you have a CSV file 'mydata.csv' to be re-encoded in "d:\myworks"
+    a. Load CSV into PowerShell:
+       in powershell window, type "$data = import-csv "
+   
