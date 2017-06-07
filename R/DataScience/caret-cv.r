@@ -108,7 +108,11 @@ plsProbs <- predict(plsFit,
                     type = "prob")
 head(plsProbs)
 # the confusion matrix and associated statistics for the model fit:
-confusionMatrix(data = plsClasses, testing$Class)
+cm.pls <- confusionMatrix(data = plsClasses, testing$Class, mode = "prec_recall")
+cm.pls$byClass["Precision"]
+cm.pls$byClass["Recall"]
+cm.pls$overall["Accuracy"]
+
 
 # <plsFitCV>: with CV ...............
 plsClassesCV <- predict(plsFitCV, 
@@ -120,7 +124,10 @@ plsProbsCV <- predict(plsFitCV,
                       type = "prob")
 head(plsProbsCV)
 # the confusion matrix and associated statistics for the model fit:
-confusionMatrix(data = plsClassesCV, testing$Class)
+cm.plscv <- confusionMatrix(data = plsClassesCV, testing$Class, mode = "prec_recall")
+cm.plscv$byClass["Precision"]
+cm.plscv$byClass["Recall"]
+cm.plscv$overall["Accuracy"]
 
 # <gbmFitCV>: with CV ...............
 gbmClassesCV <- predict(gbmFitCV, 
@@ -132,20 +139,26 @@ gbmProbsCV <- predict(gbmFitCV,
                       type = "prob")
 head(gbmProbsCV)
 # the confusion matrix and associated statistics for the model fit:
-confusionMatrix(data = gbmClassesCV, testing$Class)
+cm.gbmcv <- confusionMatrix(data = gbmClassesCV, testing$Class, mode = "prec_recall")
+cm.gbmcv$byClass["Precision"]
+cm.gbmcv$byClass["Recall"]
+cm.gbmcv$overall["Accuracy"]
 
 
 #------------------------------
 # Comparison of models
 #  (with same method)
 #------------------------------
-resamps <- resamples(list(pls = plsFitCV, gbm = gbmFitCV))
-summary(resamps)
+# resamps <- resamples(list(pls = plsFitCV, gbm = gbmFitCV))
+# summary(resamps)
+# 
+# xyplot(resamps)  # ggplot2
+# # xyplot(resamps, what = "BlandAltman") # ggplot2
+# 
+# diffs <- diff(resamps)
+# summary(diffs)
 
-xyplot(resamps)  # ggplot2
-# xyplot(resamps, what = "BlandAltman") # ggplot2
 
-diffs <- diff(resamps)
-summary(diffs)
+
 
 
