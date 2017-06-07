@@ -2,12 +2,12 @@
 
 2) Load csv into Notepad: 
    a. Notepad menu: File -> Open
-       In the open dialog:
-       - Choose file type as "All Files(*.*)"  (inline with or follow 'File name')
+       In the 'Open' dialog:
+       - Choose file type as "All Files(*.*)"  (inline with or follow the 'File name' field)
        - Choose 'Encoding' as "UTF-8"
    b. Check the loaded content. 
-      If the content is NOT readable or resonable, try (a.) again with Encoding=ANSI or =Unicode, etc.
-      until the loaded content is readable and resonable.
+      If the content is NOT readable or NOT resonable, try (a.) again with Encoding=ANSI or =Unicode, etc.
+      until the loaded content is readable AND resonable.
       
 3) Save another copy of CSV by Notepad:
    a. Notepad menu: File -> Save As
