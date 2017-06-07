@@ -1,4 +1,4 @@
-Windows Powershell is a console terminal looking like the traditional CMD/DOS terminal but far more powerful.
+Windows Powershell is a console terminal looks like the traditional CMD/DOS terminal but far more powerful.
 
 1) Launch PowerShell
    Method-1: 
