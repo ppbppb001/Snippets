@@ -23,6 +23,6 @@
 
 PS: 
   1) Notepad is supposed to be able to deal with file not large than 1GB.
-  2) Be patient while Notepad is loading file, it could be take a few minutes or longer 
+  2) Be patient while Notepad is loading file, it could take a few minutes or longer 
      to load a file size of xxxMB
      
