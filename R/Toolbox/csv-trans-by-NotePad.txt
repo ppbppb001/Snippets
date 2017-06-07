@@ -20,5 +20,5 @@
 4) Test the re-encoded csv file in R
    try 'read.csv("mydata.csv")' to load the csv file generated in step(3)
    
-   
-   
+
+PS: Notepad is supposed to be able to deal with file not large than 1GB.
