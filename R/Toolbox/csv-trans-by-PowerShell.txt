@@ -1,21 +1,30 @@
-Windows Powershell is a powerful console interface with a looking like traditional DOS terminal
+Windows Powershell is a console terminal looking like the traditional CMD/DOS terminal but far more powerful.
 
 1) Launch PowerShell
    Method-1: 
      a. Press 'Windows Key' + 'R' together.  ('Windows Key' is the key with a mark pattern like 'frame of a window')
-     b. In the pop-up windows after 'Run' prompt, input "powershell" and press 'OK' or ENTER key
+     b. In the pop-up windows and after the 'Run' prompt, type "powershell" and press 'OK' or ENTER key
    Method-2:
      a. Click Windows Start icon (the big icon at the left-bottom corner of desktop)
      b. Choose Run 
      c. follow the instruction in (Method-2.b)
-   When PowerShell is launched successfully, a DOS terminal like window will pop up.
+   When PowerShell is launched successfully, a DOS like terminal window pops up.
    
  2) PowerShell: change current directory to your R working directory
-    Using "cd" command to change current directory:
-      For example, there is a R working directory like "d:\myworks", then in powershell type "cd d:\myworks"
+    Using "cd" command to change current directory of PowerShell:
+    For example, there is a R working directory named as "d:\myworks", then type "cd d:\myworks"
+    in PowerShell to change the current directory.
       
  3) PowerShell: re-encode CSV file
-    Suppose you have a CSV file 'mydata.csv' to be re-encoded in "d:\myworks"
-    a. Load CSV into PowerShell:
-       in powershell window, type "$data = import-csv "
+    Suppose you have a CSV file 'mydata.csv' to be re-encoded and it locates in "d:\myworks"
+    a. Import CSV file and make a PowerShell object ($data):
+       Type "$data = import-csv mydata.csv"
+    b. Export PowerShell object ($data) to a CSV file, for example to "myoutput.csv":
+       Type "$data | export-csv myoutput.csv -Encoding UTF8 -NoTypeInformation"
+       
+4) Check the output CSV file made with PowerShell commands:
+   a. Open it in Excel
+   b. Open it in R
+   
+   
    
