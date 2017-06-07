@@ -1,6 +1,6 @@
 1) Launch Notepad in windows
 
-2) Load csv into Notepad: 
+2) Load CSV into Notepad: 
    a. Notepad menu: File -> Open
        In the 'Open' dialog:
        - Choose file type as "All Files(*.*)"  (inline with or follow the 'File name' field)
@@ -9,7 +9,7 @@
       If the content is NOT readable or NOT resonable, try (a.) again with Encoding=ANSI or =Unicode, etc.
       until the loaded content is readable AND resonable.
       
-3) Save another copy of CSV by Notepad:
+3) Save a re-encoded copy of CSV by Notepad:
    a. Notepad menu: File -> Save As
       In the 'Save As' dialog:
       - Name a output file such as 'mydata.csv' in the 'File name' field
@@ -17,7 +17,7 @@
       - Choose 'Encoding' as "UTF-8"
    b. Check the output CSV file by excel to see if it is re-encoded correctly
    
-4) Test the re-encoded csv file in R
+4) Test the re-encoded CSV file in R
    try 'read.csv("mydata.csv")' to load the csv file generated in step(3)
    
 
