@@ -1,4 +1,4 @@
-1) Launch NotePad in windows
+1) Launch Notepad in windows
 
 2) Load csv into Notepad: 
    a. Notepad menu: File -> Open
