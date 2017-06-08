@@ -17,6 +17,7 @@
 #   %M : minute of hour as decimal number (00-59)
 #   %S : second of minute as decimal number (00-59)
 #   %b : abbreviated month name, such as "Jun","Oct",etc.
+#   %Z : timezone, like "GMT","AEST",etc.
 
 
 # Predefined constants ......................................
