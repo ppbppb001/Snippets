@@ -5,8 +5,6 @@
 #  [2017-06-08] - Start
 #----------------------------------------
 
-
-
     
 # Explaination of the Format string: ......................
 #   %Y : 4 digits year, like '2017'
@@ -74,8 +72,6 @@ dt2 <- strptime(dt2.str, "%d/%b/%Y %H:%M:%S", tz=timeZone)
 dt2
 
 
-
-
 # [2] Retrieve date time elements as numeric from the datetime object .........
 
 dt2$year + yearBase    # retrieve year as numeric
@@ -92,14 +88,11 @@ dt2$yday               # retrieve day of year
 attributes(dt2)$tzone  # retrieve time zone
 
 
-
 # [3] datetime object to string ........................
 toString(dt2)                          # in ISO date time format
 strftime(dt2,"%d/%b/%Y")               # like '25/May/2017'
 strftime(dt2,"%b %d, %Y %H:%M")        # like 'May 25, 2017 10:11'
 strftime(dt2,"%Y-%m-%d %H:%M:%S %Z")   # like '2017-05-25 10:11:12 GMT'
-
-
 
 
 # [4] Get difference/distance between datetime objects ............ 
