@@ -8,6 +8,7 @@
 # Define the input file:
 fnIn <- "input-bad.csv"             # file name of file to be processed
 fInSize <- file.info(fnIn)$size     # get size of the input file
+# fInSize <- file.size(fnIn)
 fIn <- file(fnIn, "rb")  
 
 # Define the output file:
