@@ -6,7 +6,7 @@
 
 
 # Define the input file:
-fnIn <- "input-bad.csv"             # file name of file to be processed
+fnIn <- "bad-ctrlz.csv"             # file name of file to be processed
 fInSize <- file.info(fnIn)$size     # get size of the input file
 # fInSize <- file.size(fnIn)
 fIn <- file(fnIn, "rb")  
@@ -74,5 +74,4 @@ cat("# Size of input file = ", fInSize, "\n")
 cat("# Count of processed chunks = ", cnt.chunk, "\n")
 cat("# Count of ctrl-z found and masked = ", cnt.ctrlz, "\n")
 cat("# Time consumed =", (tmFinish[3] - tmStart[3]), "(s)")
-
 
