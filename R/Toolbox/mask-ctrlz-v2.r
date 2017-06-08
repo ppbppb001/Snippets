@@ -39,7 +39,7 @@ while (frleft > 0) {
     in.raw <- readBin(fIn,
                       what = "raw",
                       n = chunkSize,
-                      size = 1)  # read raw data into temporary buffer 'in.buf'
+                      size = 1)  # read raw data into temporary buffer 'in.raw'
     in.raw.len <- length(in.raw) 
     if (in.raw.len == 0) {
         break
