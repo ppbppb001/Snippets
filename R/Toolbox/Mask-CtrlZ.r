@@ -16,8 +16,8 @@ fnOut <- "output.csv"               # name of the processed file
 fOut <- file(fnOut, "wb")
 
 # Define the target and the replacement
-target <- 0x1a
-replacement <- 0x20
+target <- 0x1a                # target = Ctrl-Z = 0x1a
+replacement <- 0x20           # replacement = Space = 0x20
 
 # Define the params for the input scanner:
 chunkSize <- 1e6              # block size of reading = 1MB
