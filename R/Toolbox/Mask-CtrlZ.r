@@ -15,6 +15,9 @@ fIn <- file(fnIn, "rb")
 fnOut <- "output.csv"               # name of the processed file
 fOut <- file(fnOut, "wb")
 
+# Define the target and the replacement
+target <- 0x1a
+replacement <- 0x20
 
 # Define the params for the input scanner:
 chunkSize <- 1e6              # block size of reading = 1MB
@@ -44,12 +47,12 @@ while (frleft > 0) {
     } 
     
     # Locate Ctrl-Z and replace it
-    ctrlz.locs <- which(in.raw == 0x1a)
+    ctrlz.locs <- which(in.raw == target)
     ctrlz.cnt <- length(ctrlz.locs)
     if (ctrlz.cnt> 0) {
         for (i in 1:ctrlz.cnt) {
             ix <- ctrlz.locs[i]
-            in.raw[ix] <- as.raw(0x20)
+            in.raw[ix] <- as.raw(replacement)
         }
         cnt.ctrlz <- cnt.ctrlz + ctrlz.cnt
     }
@@ -74,4 +77,5 @@ cat("# Size of input file = ", fInSize, "\n")
 cat("# Count of processed chunks = ", cnt.chunk, "\n")
 cat("# Count of ctrl-z found and masked = ", cnt.ctrlz, "\n")
 cat("# Time consumed =", (tmFinish[3] - tmStart[3]), "(s)")
+
 
