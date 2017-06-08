@@ -59,8 +59,7 @@ while (frleft > 0) {
     
     # Write back 
     writeBin(in.raw, fOut)
-    
-    
+        
     cnt.chunk <- cnt.chunk + 1
     frleft <- frleft - chunkSize
 }
@@ -77,5 +76,4 @@ cat("# Size of input file = ", fInSize, "\n")
 cat("# Count of processed chunks = ", cnt.chunk, "\n")
 cat("# Count of ctrl-z found and masked = ", cnt.ctrlz, "\n")
 cat("# Time consumed =", (tmFinish[3] - tmStart[3]), "(s)")
-
 
