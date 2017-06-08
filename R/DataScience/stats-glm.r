@@ -97,9 +97,9 @@ cm.pred   # Prediction
 cm.ref    # Reference
 
 my.cm <- confusionMatrix(data = cm.pred,
-                            reference = cm.ref,
-                            mode = "prec_recall"
-                            )
+                         reference = cm.ref,
+                         mode = "prec_recall"
+                         )
 my.cm     # output of confusion matrix
 
 
