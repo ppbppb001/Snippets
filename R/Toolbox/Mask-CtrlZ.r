@@ -6,7 +6,7 @@
 
 
 # Define the input file:
-fnIn <- "bad-ctrlz.csv"             # file name of file to be processed
+fnIn <- "input-bad.csv"             # file name of file to be processed
 fInSize <- file.info(fnIn)$size     # get size of the input file
 fIn <- file(fnIn, "rb")  
 
