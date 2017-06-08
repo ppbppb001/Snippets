@@ -15,7 +15,7 @@
 #   %M : minute of hour as decimal number (00-59)
 #   %S : second of minute as decimal number (00-59)
 #   %b : abbreviated month name, such as "Jun","Oct",etc.
-#   %Z : timezone, like "GMT","AEST",etc.
+#   %Z : timezone, like 'GMT','AEST',etc.
 
 
 # Predefined constants ......................................
@@ -24,12 +24,11 @@ monthBase <- 1
 
 year <- 2017     
 month <- 5         # June (1-12)
-mday <- 15          # day of month (1-31)
+mday <- 15         # day of month (1-31)
 hour <- 10         # 10am (0-23)
 minute <- 11       # minutes of hour (0-59)
 second <- 12       # seconds of minute (0-59)
 timeZone <- "GMT"  # timezone = GMT
-
 
 
 # [1] Create a datetime object ........................
@@ -86,6 +85,9 @@ dt2$wday               # retrieve day of week
 dt2$yday               # retrieve day of year
 
 attributes(dt2)$tzone  # retrieve time zone
+
+# A quick method to tell distance in seconds
+as.numeric(dt2) - as.numeric(dt)
 
 
 # [3] datetime object to string ........................
