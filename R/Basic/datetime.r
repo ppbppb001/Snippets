@@ -100,10 +100,10 @@ x.weeks <- as.numeric(difftime(dt2, dt, units="weeks"))     # distance in weeks
 x.weeks
 x.days <- as.numeric(difftime(dt2, dt, units="days"))       # distance in days
 x.days
-x.hours <- as.numeric(difftime(dt2, dt, units="hours"))     # distance in days
+x.hours <- as.numeric(difftime(dt2, dt, units="hours"))     # distance in hours
 x.hours
-x.minutes <- as.numeric(difftime(dt2, dt, units="mins"))    # distance in days
+x.minutes <- as.numeric(difftime(dt2, dt, units="mins"))    # distance in minutes
 x.minutes
-x.seconds <- as.numeric(difftime(dt2, dt, units="secs"))    # distance in days
+x.seconds <- as.numeric(difftime(dt2, dt, units="secs"))    # distance in seconds
 x.seconds
 
