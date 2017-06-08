@@ -1,5 +1,5 @@
 #=================================
-#  <glm.r>
+#  <stats-glm.r>
 #   Using standard functions in
 #   package {stats}
 #=================================
