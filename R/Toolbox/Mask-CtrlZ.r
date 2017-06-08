@@ -1,18 +1,18 @@
-#=====================================
+#===========================================
 # <mask-ctrlz.r>:
-#  Replace Ctrl-Z/SUB char in the given
+#  Replace Ctrl-Z/SUB/EOF char in the given
 #  file with SPACE char
-#=====================================
+#===========================================
 
 
 # Define the input file:
-fnIn <- "bad-ctrlz.csv"             # file name of file to be processed
+fnIn <- "bad-ctrlz.csv"             # name of the file to be processed
 fInSize <- file.info(fnIn)$size     # get size of the input file
 # fInSize <- file.size(fnIn)
 fIn <- file(fnIn, "rb")  
 
 # Define the output file:
-fnOut <- "output.csv"               # name of processed file
+fnOut <- "output.csv"               # name of the processed file
 fOut <- file(fnOut, "wb")
 
 
