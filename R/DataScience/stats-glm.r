@@ -34,7 +34,6 @@ if (levels(cm.ref)[1] == "0") {
 }
 
 
-
 # [Data Set 2]:
 # Prepare data set [Iris] .......................
 # data(iris)           # Fetch data set from the library(datsets)
@@ -102,3 +101,4 @@ my.cm <- confusionMatrix(data = cm.pred,
                             mode = "prec_recall"
                             )
 my.cm     # output of confusion matrix
+
