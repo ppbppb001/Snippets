@@ -4,7 +4,7 @@
 #   package {stats}
 #=================================
 
-library(caret)
+#library(caret)
 
 # [Data Set 1]:
 # Prepare data set  .......................
@@ -77,8 +77,11 @@ print(cm.pred)   # Prediction
 
 print(cm.ref)    # Reference
 
-my.cm <- confusionMatrix(data = cm.pred,
-                         reference = cm.ref,
-                         mode = "prec_recall"
-)
-print(my.cm)     # output of confusion matrix
+#my.cm <- confusionMatrix(data = cm.pred,
+#                         reference = cm.ref,
+#                         mode = "prec_recall"
+#)
+#print(my.cm)     # output of confusion matrix
+
+my.table <- table(cm.ref, cm.pred)
+print (my.table)
