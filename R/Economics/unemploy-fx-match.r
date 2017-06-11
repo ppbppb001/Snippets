@@ -72,6 +72,8 @@ xdatestr <- paste(as.character(xyears),"-",
                  )                                        # random date as string
 xdate <- strptime(target.datestr, "%Y-%m-%d")             # format of random date string is like "YYYY-MM-DD"
 target.coldate <- strftime(xdate, target.dateformat)      # date column of target as character
+target.df <- data.frame(Date = target.coldate,            # Col-1: Date
+                        X = target.colx)                  # Col-2: X
 
 
 
@@ -79,13 +81,12 @@ target.coldate <- strftime(xdate, target.dateformat)      # date column of targe
 
 tm.Start <- proc.time()        # Time of Start
 
-# Add 2 extra column to represent unemployment and AUD:
-target.dfnew <- data.frame(Date = target.coldate,                           # Col-1: Date
-                           X = target.colx,                                 # Col-2: X
-                           Unemployment.Rate = rep(NA, target.rows),        # Col-3: Unemployment.Rate
-                           Unemployment.Rate.Annual = rep(NA, target.rows), # Col-4: Unemployment.Rate.Annual
-                           AUDUSD = rep(NA, target.rows),                   # Col-5: AUDUSD
-                           AUDUSD.Annual = rep(NA, target.rows)             # Col-6: AUDUSD.Annual
+# Add 4 extra column to represent unemployment and AUD:
+target.dfnew <- data.frame(target.df,                                       # Col-1~n: Current target
+                           Unemployment.Rate = rep(NA, target.rows),        # Col-n+1: Unemployment.Rate
+                           Unemployment.Rate.Annual = rep(NA, target.rows), # Col-n+2: Unemployment.Rate.Annual
+                           AUDUSD = rep(NA, target.rows),                   # Col-n+3: AUDUSD
+                           AUDUSD.Annual = rep(NA, target.rows)             # Col-n+4: AUDUSD.Annual
                           )
 
 # Build a string vector in format of lookup.dateformat 
@@ -113,5 +114,4 @@ tm.Finish <- proc.time()   # Time of Finish
 print (head(target.dfnew))
 print (tail(target.dfnew))
 cat("\nTime Consumed = ", (tm.Finish - tm.Start)[3],"(s)")
-
 
