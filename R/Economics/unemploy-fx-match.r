@@ -14,9 +14,6 @@ target.dateformat <- "%Y-%m-%d"     # target date format: '2016-05-10'
 # target.dateformat <- "%b %d, %Y"   # target date format: 'May 10, 2016'
 # target.dateformat <- "%b %d, %y"   # target date format: 'May 10, 16'
 # target.dateformat <- "%d/%m/%Y"   # target date format: '10/5/2016'
-
-
-
 #
 target.rows <- 10000                # rows of target data frame
 # column index of 'lookup.dfnew'
