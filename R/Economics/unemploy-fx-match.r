@@ -7,8 +7,16 @@
 
 
 # Key Constants: ........................
-lookup.dateformat <- "%d-%b-%y"     # date format string for lookup, like'05-May-16'
-target.dateformat <- "%d-%b-%Y"     # date format string for target, like'05-May-2016'
+lookup.dateformat <- "%d-%b-%y"     # date format string for lookup, like'10-May-16'
+target.dateformat <- "%Y-%m-%d"     # target date format: '2016-05-10'
+# target.dateformat <- "%d-%b-%Y"   # target date format: '10-May-2016'
+# target.dateformat <- "%d-%b-%y"   # target date format: '10-May-16'
+# target.dateformat <- "%b %d, %Y"   # target date format: 'May 10, 2016'
+# target.dateformat <- "%b %d, %y"   # target date format: 'May 10, 16'
+# target.dateformat <- "%d/%m/%Y"   # target date format: '10/5/2016'
+
+
+
 #
 target.rows <- 10000                # rows of target data frame
 # column index of 'lookup.dfnew'
@@ -61,7 +69,7 @@ for (i in seq(lookup.rows)) {
 # Make pseudo target table to be improved: ...................
 target.colx <- sample(100, target.rows, replace = TRUE)  # colx of target is for nothing
 
-# Make data vector of date column of target
+# Make the random date series
 xyears <- sample(2010:2016, target.rows, replace = TRUE)  # random years
 xmonths <- sample(1:12, target.rows, replace = TRUE)      # random months
 xdays <- sample(1:28, target.rows, replace = TRUE)        # random days
@@ -70,8 +78,10 @@ xdatestr <- paste(as.character(xyears),"-",
                   as.character(xdays),
                   sep=""
                  )                                        # random date as string
-xdate <- strptime(target.datestr, "%Y-%m-%d")             # format of random date string is like "YYYY-MM-DD"
+xdate <- strptime(xdatestr, "%Y-%m-%d")                   # format of random date string is like "YYYY-MM-DD"
+# Convert random xdate to target date
 target.coldate <- strftime(xdate, target.dateformat)      # date column of target as character
+# Make the target
 target.df <- data.frame(Date = target.coldate,            # Col-1: Date
                         X = target.colx)                  # Col-2: X
 
@@ -82,7 +92,7 @@ target.df <- data.frame(Date = target.coldate,            # Col-1: Date
 tm.Start <- proc.time()        # Time of Start
 
 # Add 4 extra column to represent unemployment and AUD:
-target.dfnew <- data.frame(target.df,                                       # Col-1~n: Current target
+target.dfnew <- data.frame(target.df,                                       # Col-1~n: Original target
                            Unemployment.Rate = rep(NA, target.rows),        # Col-n+1: Unemployment.Rate
                            Unemployment.Rate.Annual = rep(NA, target.rows), # Col-n+2: Unemployment.Rate.Annual
                            AUDUSD = rep(NA, target.rows),                   # Col-n+3: AUDUSD
@@ -97,7 +107,7 @@ target.datestr.aslookup <- strftime(xdate, lookup.dateformat)          # xdate -
 # scan and match: loop through 'lookup.dfnew':
 for (i in seq(lookup.rows)) {
     k.row <- lookup.dfnew[i,]                               # one row in 'lookup.dfnew'
-    k.date <- k.row[, ci.k.date]                            # k.date = date in string
+    k.date <- as.character(k.row[, ci.k.date])              # k.date = date in string
     ixs <- grep(k.date, target.datestr.aslookup)            # indices of target items matching k.date
     if (length(ixs) > 0){                                   # index set available?
         target.dfnew[ixs, ci.t.ue] <- k.row[, ci.k.ue]      # copy "Unemployment.Rate"
