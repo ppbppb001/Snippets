@@ -4,28 +4,37 @@
 #   package {stats}
 #=================================
 
+library(caret)
 
 # [Data Set 1]:
-# Prepare data set [Sonar] .......................
-library(mlbench)    # [ Machine Learning Benchmark Problems ]
-data(Sonar)
+# Prepare data set  .......................
+dlen <- 1000
+
+c1 <- sample(dlen)
+c1
+c2 <- sample(0:1,1000,replace = TRUE)
+c2
+df <- data.frame(Value=c1, Class=c2)
+df
+
+df[100,1] <- NA
+df[200,2] <- NA
+
 
 # Partition data set:
-inTrain <- createDataPartition(y = Sonar$Class,
-                               p = 0.75,
-                               list = FALSE)
-str(inTrain)
+inTrain = 1:(dlen*0.7)
+inTrain
 
-training <- Sonar[inTrain, ]  # data 'inTrain' for training is part of 'Sonar'
+training <- df[inTrain, ]  # data 'inTrain' for training is part of 'Sonar'
 nrow(training)
 
-testing <- Sonar[-inTrain, ]  # data with 'inTrain' removed from 'Sonar' is used as testing set
+testing <- df[-inTrain, ]  # data with 'inTrain' removed from 'Sonar' is used as testing set
 nrow(testing)
 
 my.formula <- "Class~."
 
 # Prepare refrence data:
-cm.ref <- ifelse(testing$Class=="M", 1, 0)   # if class==M then 1 else 0
+cm.ref <- testing$Class
 cm.ref <- as.factor(cm.ref)
 if (levels(cm.ref)[1] == "0") {
     levels(cm.ref)[2] <- "1"
@@ -33,34 +42,6 @@ if (levels(cm.ref)[1] == "0") {
     levels(cm.ref)[2] <- "0"
 }
 
-
-# [Data Set 2]:
-# Prepare data set [Iris] .......................
-# data(iris)           # Fetch data set from the library(datsets)
-# 
-# iris.bak <- iris     # iris.bak as backup
-# 
-# iris <- iris[sample(1:dim(iris)[1]),]
-# 
-# iris$Species <- as.factor(ifelse(iris$Species=="setosa","1","0"))  # modify Col.Species
-# 
-# # inTrain <- createDataPartition(y = iris$Species,
-# #                                p = 0.75,
-# #                                list = FALSE)
-# iris.len <- dim(iris)[1]
-# inTrain <- 1:(iris.len * 0.75)
-# str(inTrain)
-# 
-# training <- iris[inTrain, ]  # data 'inTrain' for training is part of 'Sonar'
-# nrow(training)
-# 
-# testing <- iris[-inTrain, ]  # data with 'inTrain' removed from 'Sonar' is used as testing set
-# nrow(testing)
-# 
-# my.formula <- "Species~."
-# 
-# # Prepare refrence data:
-# cm.ref <- testing$Species
 
 
 # Train/Fit ...........................................
@@ -71,16 +52,16 @@ my.glmfit <- glm(formula = my.formula,
                  method = "glm.fit",
                  family = binomial(link="logit"),
                  control = glm.control(epsilon = 1e08, maxit = 10, trace = FALSE)
-                )
-my.glmfit
+)
+print(my.glmfit)
 
 
 # Predict ............................................
 my.glmpred <- predict(object = my.glmfit,
                       newdata = testing,
                       type = "response"
-                      )
-my.glmpred
+)
+print(my.glmpred)
 
 
 # confusion maxtrix: ...................................
@@ -92,14 +73,12 @@ if (levels(cm.pred)[1] == "0") {
 } else {
     levels(cm.pred)[2] <- "0"
 }
-cm.pred   # Prediction
+print(cm.pred)   # Prediction
 
-cm.ref    # Reference
+print(cm.ref)    # Reference
 
 my.cm <- confusionMatrix(data = cm.pred,
                          reference = cm.ref,
                          mode = "prec_recall"
-                         )
-my.cm     # output of confusion matrix
-
-
+)
+print(my.cm)     # output of confusion matrix
