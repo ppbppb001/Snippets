@@ -42,8 +42,9 @@ lookup.dfnew <- data.frame(Date = lookup.df[,"Date"],                           
                            Unemployment.Rate.Annual = rep(NA, lookup.rows),      # Col-3: Unemployment.Rate.Annual
                            Date.FX = lookup.df[,"Date.FX"],                      # Col-4: Date.FX (dd-mm-yy)
                            AUDUSD = lookup.df[,"AUDUSD"],                        # Col-5: AUDUSD
-                           AUDUSD.Annual = rep(NA, lookup.rows)                  # Col-6: AUDUSD.Annual
-                           )
+                           AUDUSD.Annual = rep(NA, lookup.rows),                 # Col-6: AUDUSD.Annual
+                           stringsAsFactors = FALSE
+                          )
 # Calculate means of year and write back to 'lookup.dfnew'
 lookup.datefx <- strptime(lookup.df[,"Date.FX"], lookup.dateformat)
 lastyear <- 0
@@ -80,8 +81,9 @@ xdate <- strptime(xdatestr, "%Y-%m-%d")                   # format of random dat
 target.coldate <- strftime(xdate, target.dateformat)      # date column of target as character
 # Make the target
 target.df <- data.frame(Date = target.coldate,            # Col-1: Date
-                        X = target.colx)                  # Col-2: X
-
+                        X = target.colx,                  # Col-2: X
+                        stringsAsFactors = FALSE
+                       )
 
 
 # Improve/Match the target data frame with unemployment and AUD .............................. 
@@ -93,7 +95,8 @@ target.dfnew <- data.frame(target.df,                                       # Co
                            Unemployment.Rate = rep(NA, target.rows),        # Col-n+1: Unemployment.Rate
                            Unemployment.Rate.Annual = rep(NA, target.rows), # Col-n+2: Unemployment.Rate.Annual
                            AUDUSD = rep(NA, target.rows),                   # Col-n+3: AUDUSD
-                           AUDUSD.Annual = rep(NA, target.rows)             # Col-n+4: AUDUSD.Annual
+                           AUDUSD.Annual = rep(NA, target.rows),            # Col-n+4: AUDUSD.Annual
+                           stringsAsFactors = FALSE
                           )
 
 # Build a string vector in format of lookup.dateformat 
@@ -121,5 +124,4 @@ tm.Finish <- proc.time()   # Time of Finish
 print (head(target.dfnew))
 print (tail(target.dfnew))
 cat("\nTime Consumed = ", (tm.Finish - tm.Start)[3],"(s)")
-
 
