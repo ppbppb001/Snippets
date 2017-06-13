@@ -44,3 +44,6 @@ classes.cntC <- length(which(classes=="C"))
 classes.cntC                                 # count of class-C (Cancelled)
 nrow(df.down) == min(classes.cntA, classes.cntC)*2  # check size of down-sample output
 nrow(df.up) == max(classes.cntA, classes.cntC)*2    # check size of up-sample output
+
+
+
