@@ -3,6 +3,8 @@
 #  Improve the target table with 
 #  unemployment and FX data colmum
 #  date matcing
+#
+#  [2017-06-13] - Created
 #----------------------------------
 
 
@@ -46,9 +48,8 @@ lookup.dfnew <- data.frame(Date = lookup.df[,"Date"],                           
                            Date.FX = lookup.df[,"Date.FX"],                      # Col-4: Date.FX (dd-mm-yy)
                            AUDUSD = lookup.df[,"AUDUSD"],                        # Col-5: AUDUSD
                            AUDUSD.Annual = rep(NA, lookup.rows),                 # Col-6: AUDUSD.Annual
-                           AUDUSD.K1 = rep(NA, lookup.rows),          # Col-7: AUDUSD.K1
-                           stringsAsFactors = FALSE
-)
+                           AUDUSD.K1 = rep(NA, lookup.rows),                     # Col-7: AUDUSD.K1
+                           stringsAsFactors = FALSE)
 # Calculate means of year and write back to 'lookup.dfnew'
 lookup.datefx <- strptime(lookup.df[,"Date.FX"], lookup.dateformat)
 aud.annual <- NULL   # save annual value of AUD
@@ -85,16 +86,16 @@ xdays <- sample(1:28, target.rows, replace = TRUE)        # random days
 xdatestr <- paste(as.character(xyears),"-",
                   as.character(xmonths),"-",
                   as.character(xdays),
-                  sep=""
-)                                        # random date as string
+                  sep="")                                 
+# random date as string
 xdate <- strptime(xdatestr, "%Y-%m-%d")                   # format of random date string is like "YYYY-MM-DD"
 # Convert random xdate to target date
 target.coldate <- strftime(xdate, target.dateformat)      # date column of target as character
 # Make the target
 target.df <- data.frame(Date = target.coldate,            # Col-1: Date
                         X = target.colx,                  # Col-2: X
-                        stringsAsFactors = FALSE
-)
+                        stringsAsFactors = FALSE)
+
 
 
 # Improve/Match the target data frame with unemployment and AUD .............................. 
@@ -108,8 +109,7 @@ target.dfnew <- data.frame(target.df,                                       # Co
                            AUDUSD = rep(NA, target.rows),                   # Col-n+3: AUDUSD
                            AUDUSD.Annual = rep(NA, target.rows),            # Col-n+4: AUDUSD.Annual
                            AUDUSD.K1 = rep(NA, target.rows),                # Col-n+5: AUDUSD.K1
-                           stringsAsFactors = FALSE
-)
+                           stringsAsFactors = FALSE)
 
 # Build a string vector in format of lookup.dateformat 
 # to reflect target date column:
@@ -131,6 +131,7 @@ for (i in seq(lookup.rows)) {
 }
 
 tm.Finish <- proc.time()   # Time of Finish
+
 
 
 # Check result: ..............
