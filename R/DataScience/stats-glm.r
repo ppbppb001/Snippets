@@ -12,7 +12,7 @@ dlen <- 1000
 
 c1 <- sample(dlen)
 c1
-c2 <- sample(0:1,1000,replace = TRUE)
+c2 <- sample(0:1,dlen,replace = TRUE)
 c2
 df <- data.frame(Value=c1, Class=c2)
 df
