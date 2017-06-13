@@ -102,7 +102,7 @@ target.df <- data.frame(Date = target.coldate,            # Col-1: Date
 
 tm.Start <- proc.time()        # Time of Start
 
-# Add 4 extra column to represent unemployment and AUD:
+# Add extra columns to target data frame:
 target.dfnew <- data.frame(target.df,                                       # Col-1~n: Original target
                            Unemployment.Rate = rep(NA, target.rows),        # Col-n+1: Unemployment.Rate
                            Unemployment.Rate.Annual = rep(NA, target.rows), # Col-n+2: Unemployment.Rate.Annual
