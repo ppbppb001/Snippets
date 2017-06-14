@@ -17,8 +17,8 @@ c2
 df <- data.frame(Value=c1, Class=c2)
 df
 
-df[100,1] <- NA
-df[200,2] <- NA
+# df[100,1] <- NA
+# df[200,2] <- NA
 
 
 # Partition data set:
