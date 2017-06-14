@@ -17,7 +17,6 @@ target.dateformat <- "%Y-%m-%d"     # target date format: '2016-05-20'
 # target.dateformat <- "%b %d, %y"    # target date format: 'May 20, 16'
 # target.dateformat <- "%d/%m/%Y"     # target date format: '20/5/2016'
 #
-target.rows <- 10000                  # rows of target data frame
 # column name of 'lookup.dfnew'
 cn.k.date <- "Date"
 cn.k.ue <- "Unemployment.Rate"
@@ -120,6 +119,7 @@ for (i in seq(lookup.rows)) {
 # Make pseudo target table to be improved: ...................
 
 # *** THE AFTER MAY BE MASKED OFF ***
+target.rows <- 10000                                     # rows of pseudo target data frame
 # Make pseudo X data series:
 target.colx <- sample(100, target.rows, replace = TRUE)  # colx of target is for nothing
 # Make pseudo date series
