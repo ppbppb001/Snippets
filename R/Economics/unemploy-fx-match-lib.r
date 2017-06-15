@@ -46,7 +46,9 @@ matchUempFx <- function(data = NULL,
     
     # Load unemployment and FX data lookup table
     lookup.df <- read.csv(lookup.csv,
-                           stringsAsFactors = FALSE)
+                          stringsAsFactors = FALSE)
+    if (is.null(lookup.df))
+        return(NULL)
     lookup.rows <- dim(lookup.df)[1]
     if (lookup.rows < 1)  # Lookup table available ?
         return(NULL)
@@ -119,11 +121,11 @@ matchUempFx <- function(data = NULL,
                              
     # Add extra columns to source data frame by matching lookup table:
     if (!is.data.frame(data))
-        return (NULL)
+        return(NULL)
     
     target.rows <- length(data[,1])   # get row count of df.src
     if (target.rows < 1) {
-        return (NULL)
+        return(NULL)
     }
     
     target.dfnew <- data.frame(data,                                            # Source data frame
@@ -167,5 +169,6 @@ matchUempFx <- function(data = NULL,
     
     return(target.dfnew)
 }
+
 
 
