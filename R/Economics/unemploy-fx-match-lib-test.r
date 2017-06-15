@@ -54,3 +54,14 @@ print (tail(df.new))
 cat("\nTime Consumed = ", (tm.Finish - tm.Start)[3],"(s)")
 
 # *** END OF TEST ***
+
+
+
+# How to create lookup table without amending a source data frame?
+
+matchUempFx()               # call 'matchUempFx()' without any input to make
+                            # it only create the global lookup table
+
+print(head(lookup.UempFx))  # check content of global lookup table
+
+
