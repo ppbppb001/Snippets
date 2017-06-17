@@ -18,19 +18,20 @@ source("ggplot2-mytools-lib.r")  # load mytools code module
 
 
 # Define const -----------------------------
-test.count <- 10
-test.dlen <- 1000
+test.count <- 10     # number of testing runs
+test.dlen <- 1000    # length of testing data set
 test.split <- 0.7    # 70% as training data set
-test.output <- list(ref = NULL,
-                    glm.pred = NULL,
-                    cm = NULL,
-                    table = NULL,
-                    rocr.pred = NULL,
-                    perf.auc = NULL,
-                    perf.recall = NULL,
-                    perf.accerr = NULL,
-                    perf.tprfpr = NULL
-                    )                   # list holding output results  
+# 'test.output' is a list of lists to save output results:  
+test.output <- list(ref = list(),            # list of reference data sets
+                    glm.pred = list(),       # list of glm predictions
+                    cm = list(),             # list of confusion matrix
+                    table = list(),          # list of tables
+                    rocr.pred = list(),      # list of rocr predictioin objects
+                    perf.tprfpr = list(),    # list of rocr performance objects for ROC
+                    perf.auc = list(),       # list of rocr performance objects for AUC
+                    perf.recall = list(),    # list of rocr performance objects for Recall
+                    perf.accerr = list()     # list of rocr performance objects for Acc/Err
+                    )                      
 
 
 # Testing loop ----
@@ -40,12 +41,12 @@ test.output <- list(ref = NULL,
 #   4. measure: confusion matrix / table / rocr performance
 for (i in 1:test.count) {
     
-    # (1) Prepare data set  ------------------------------
+    # (1) Fabricate pseudo data set  ------------------------------
     set.seed(i*100+i)
     
-    c1 <- sample(test.dlen)
+    c1 <- sample(test.dlen)                      # col-1 of pseudo data set
     c1
-    c2 <- sample(0:1,test.dlen,replace = TRUE)
+    c2 <- sample(0:1,test.dlen,replace = TRUE)   # col-2 of pseudo data set
     c2
     df <- data.frame(Value=c1, Class=c2)
     df
@@ -201,5 +202,6 @@ ggp.auc <- plotPoints(title = "AUCs",
                       x.range = xrange, y.range = yrange,
                       smooth = TRUE)
 print(ggp.auc)
+
 
 
