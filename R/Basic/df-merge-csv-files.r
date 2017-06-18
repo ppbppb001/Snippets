@@ -1,21 +1,21 @@
+# Define set of csv file names:
+csvnames <- c("df-1.csv",
+              "df-2.csv",
+              "df-3.csv")
+csvcnt <- length(csvnames) 
 
-csvcnt <- 3                               # number of csv files
-
-# Make list of csv file names
-fnlist <- list()
-for (i in 1:csvcnt) {            
-    fn <- paste0("df-",i,".csv")          # generate file name by 'i': "df-1.csv","df-2.csv" ,,,
-    fnlist <- c(fnlist, fn)
-}
-
-# Read csv files and merge into output data frame:
-df.out <- NULL                            # initialize output data frame: df.out
+# Load csv into a list of data frame:
+dflist <- list()
 for (i in 1:csvcnt) {           
-    fn <- fnlist[[i]]                     # get file name of csv file
+    fn <- csvnames[i]                     # get file name of csv file
     df <- read.csv(fn)                    # read csv into df
-    df.out <- rbind(df.out, dflist[[i]])  # bind df with df.out
+    dflist <- c(dflist, list(df))
 }
 
+# Merge list of data frame into one output:
+df.out <- NULL
+for (i in 1:length(dflist)) {
+    df.out <- rbind(df.out, dflist[[i]])
+}
 
-df.out                                    # print df.out             
-
+df.out
