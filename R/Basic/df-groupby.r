@@ -56,4 +56,3 @@ out.df <- data.frame(Group = out.group,
 out.df.x <- subset(out.df, out.df$G.Status=="X")    # out.df.x = subset of out.df with G.Status = X
 out.df.y <- subset(out.df, out.df$G.Status=="Y")    # out.df.x = subset of out.df with G.Status = Y
 
-
