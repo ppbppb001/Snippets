@@ -6,7 +6,9 @@
 #   2) test multi-layers chart plotting functions
 #      in 'ggplot2-mytools-lib.r'
 #
-#   [2017-06-16]
+#   [2017-06-16] - Initialized
+#   [2017-06-20] - Combine 2 plots into one 
+#                  by 'multiPlot'
 #-----------------------------------------------
 
 
@@ -155,7 +157,8 @@ ggp.roc <- plotLines(title = "ROC Curve",
                      x.name = xname, y.name = yname,
                      x.values = xvalues, y.values = yvalues,
                      x.range = xrange, y.range = yrange,
-                     index.text = text, index.pos = 4)             # Generate plot
+                     index.text = text, index.pos = 4,
+                     index.x = 0.6)                               # Generate plot
 print(ggp.roc)                                                     # Display plot
 
 
@@ -167,7 +170,8 @@ yvalues <- sapply(test.output$perf.recall, function(v) v@y.values)
 xrange <- range(unlist(xvalues), na.rm = TRUE)
 yrange <- range(unlist(yvalues), na.rm = TRUE)
 
-ggp.recall <- plotLines(x.name = xname, y.name = yname,
+ggp.recall <- plotLines(title = "Recall",
+                        x.name = xname, y.name = yname,
                         x.values = xvalues, y.values = yvalues,
                         x.range = xrange, y.range = yrange)
 print(ggp.recall)
@@ -203,5 +207,8 @@ ggp.auc <- plotPoints(title = "AUCs",
                       smooth = TRUE)
 print(ggp.auc)
 
+
+# Combine 2 plots into one graph -------------
+multiplot(ggp.roc, ggp.recall, cols=2)
 
 
