@@ -1,4 +1,4 @@
-# <glm-performance-multiple-test-r2.r> -------------
+# <glm-performance-multiple-test.r> -------------
 #
 # [2017-06-16]:
 #   1) test metric funtions applicable to glm,
