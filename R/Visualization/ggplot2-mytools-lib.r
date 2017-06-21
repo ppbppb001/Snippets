@@ -159,7 +159,7 @@ plotPoints <- function(title = NULL,
 
 
 
-
+# <Function>: multiPlot ----------------------------------
 # Multiple plot function
 #
 # ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
