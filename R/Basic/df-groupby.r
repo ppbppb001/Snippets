@@ -2,7 +2,8 @@
 #  1) Grouped by index column
 #  2) Doing calculations based on the groups
 #
-#  [2017-06-17] - v1
+#  [2017-06-17] - r1
+#  [2017-06-23] - r2: fiter of date range
 #---------------------------------------------
 
 
@@ -12,16 +13,28 @@ groups.len <- 100
 
 
 # Make pseudo data frame ---------------------------
-elements.value <- sample(elements.len)
-elements.status <- sample(c("A","B","C"), elements.len, replace = TRUE)
 groups.value <- sample(1:groups.len, elements.len, replace = TRUE)
 groups.status <- ifelse(groups.value %% 4 == 0, "X","Y")
+elements.value <- sample(elements.len)
+elements.status <- sample(c("A","B","C"), elements.len, replace = TRUE)
+# element date:
+yy <- sample(2005:2015, elements.len, replace = TRUE)
+mm <- sample(1:12, elements.len, replace = TRUE)
+dd <- sample(1:28, elements.len, replace = TRUE)
+ds <- sprintf("%4.4d-%2.2d-%2.2d", yy, mm, dd)
+
 
 # Compose pseudo data frame: test.df
-test.df <- data.frame(Group = groups.value,
-                      GStatus = groups.status,
-                      Element = elements.value,
-                      EStatus = elements.status)
+source.df <- data.frame(Group = groups.value,
+                        GStatus = groups.status,
+                        Element = elements.value,
+                        EStatus = elements.status,
+                        EDate = ds)
+
+# Pick the records in the given date range
+ix <- which(as.character(source.df$EDate)>="2014-01-01" &
+            as.character(source.df$EDate)<="2014-12-31")
+test.df <- source.df[ix,]
 
 # Use test.df$group as index column:
 out.group <- split(test.df$Group, test.df$Group)  
