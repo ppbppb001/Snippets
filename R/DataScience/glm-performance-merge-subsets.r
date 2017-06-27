@@ -6,10 +6,12 @@ library(ggplot2)
 test.dlen <- 100
 test.split <- 0.7    # 70% as training data set
 
+# seed <- proc.time()[3]   # seed initialized with random value(system ticks)
+seed <- 100                # seed initialized with a fix value 
 
 # [Subset 1]: ------------------------
 # Prepare data frame:
-set.seed(1000)
+set.seed(seed+1000)
 c1 <- sample(test.dlen)
 c2 <- sample(0:1,test.dlen,replace = TRUE)
 df <- data.frame(Value=c1, Class=c2)
@@ -34,7 +36,7 @@ glm.pred.s1 <- predict(object = glm.fit.s1,
 
 # [Subset 2]: ------------------------
 # Prepare data frame:
-set.seed(2000)
+set.seed(seed+2000)
 c1 <- sample(test.dlen)
 c2 <- sample(0:1,test.dlen,replace = TRUE)
 df <- data.frame(Value=c1, Class=c2)
@@ -59,7 +61,7 @@ glm.pred.s2 <- predict(object = glm.fit.s2,
 
 # [Subset 3]: ------------------------
 # Prepare data frame:
-set.seed(3000)
+set.seed(seed+3000)
 c1 <- sample(test.dlen)
 c2 <- sample(0:1,test.dlen,replace = TRUE)
 df <- data.frame(Value=c1, Class=c2)
@@ -129,7 +131,6 @@ ref.all.t <- as.factor(ref.all.t)                      # Convert to factor
 ref.all.t <- ref.all.t[-c(1,2)]                        # Remove preamble
 table.all <- table(ref.all.t, pred.all.t)
 table.all
-
 
 
 
