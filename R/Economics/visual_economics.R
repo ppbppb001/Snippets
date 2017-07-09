@@ -1,7 +1,4 @@
 
-setwd('e:/cat/projects/r practice/DIBP')
-rm(list=ls())
-
 df0 <- read.csv('aus-economics-features.csv', header=T)
 df <- df0[264:nrow(df0),]
 
