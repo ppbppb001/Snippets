@@ -13,18 +13,18 @@ library(ggplot2)
 
 # <glmComparison>: main entry -----------------------------------------
 glmComparison <- function(
-                    data.base = NULL,       # base data frame
-                    data.ext = NULL,        # extra data frame
-                    name.date = "Date",     # name of date column
-                    name.key = "Key",       # name of key column
-                    name.class = "Class",   # name of class column
-                    names.ext = NULL,       # name of columns of extra data frame
-                    date.train = NULL,      # c(start,end), start/end is char as "yyyy-mm-dd"
-                    date.test = NULL,       # c(start,end), start/end is char as "yyyy-mm-dd", when mode==2
-                    mode = 1,               # 1=train calc, 2=pred calc
-                    iteration = 5,          # number of iterations
-                    balance = 1             # balance of classification tags
-                ){
+    data.base = NULL,       # base data frame
+    data.ext = NULL,        # extra data frame
+    name.date = "Date",     # name of date column
+    name.key = "Key",       # name of key column
+    name.class = "Class",   # name of class column
+    names.ext = NULL,       # name of columns of extra data frame
+    date.train = NULL,      # c(start,end), start/end is char as "yyyy-mm-dd"
+    date.test = NULL,       # c(start,end), start/end is char as "yyyy-mm-dd", when mode==2
+    mode = 1,               # 1=train calc, 2=pred calc
+    iteration = 5,          # number of iterations
+    balance = 1             # balance of classification tags
+){
     
     # (1) Initializations -------------------------------
     # Check input params
@@ -39,16 +39,16 @@ glmComparison <- function(
     
     # Define varibles to store measures:  
     measures.template <- list(
-                              # ref = list(),            # list of reference data sets
-                              # glm.pred = list(),       # list of glm predictions
-                              cm = list(),             # list of confusion matrix
-                              table = list(),          # list of tables
-                              # rocr.pred = list(),      # list of rocr predictioin objects
-                              perf.tprfpr = list(),    # list of rocr performance objects for ROC
-                              perf.auc = list(),       # list of rocr performance objects for AUC
-                              perf.recall = list(),    # list of rocr performance objects for Recall
-                              perf.accerr = list()     # list of rocr performance objects for Acc/Err
-                             )                      
+        # ref = list(),            # list of reference data sets
+        # glm.pred = list(),       # list of glm predictions
+        cm = list(),             # list of confusion matrix
+        table = list(),          # list of tables
+        # rocr.pred = list(),      # list of rocr predictioin objects
+        perf.tprfpr = list(),    # list of rocr performance objects for ROC
+        perf.auc = list(),       # list of rocr performance objects for AUC
+        perf.recall = list(),    # list of rocr performance objects for Recall
+        perf.accerr = list()     # list of rocr performance objects for Acc/Err
+    )                      
     measures.b <- measures.template     # list of metrics for base data set 
     measures.e <- measures.template      # list of metrics for extended data set
     
@@ -75,7 +75,7 @@ glmComparison <- function(
         
         ix.s2 <- df.ext[, name.key] %in% data.base[, name.key]
         df.ext.sub <- df.ext[ix.s2, ]
-            
+        
         df.e <- merge(df.base.sub, 
                       df.ext.sub, 
                       by.x = name.key,
@@ -182,7 +182,7 @@ glmPredAndEval <- function(data.train = NULL,       # data frame as training set
                            data.test = NULL,        # data frame as testing set
                            name.ref = NULL,         # name of reference/label column
                            balance = NULL           # balance of class/ref
-                           ) {       
+) {       
     
     # Prepare output result:
     output <- list(cm = list(),
@@ -218,6 +218,7 @@ glmPredAndEval <- function(data.train = NULL,       # data frame as training set
                         type = "response")
     
     # [Evaluate] -----------------------------------------
+    
     # (1) confusion maxtrix:
     # Prepare prediction data for confusion matrix:
     cm.pred <- ifelse(glm.pred > 0.5, 1, 0)  # if pred > 0.5 then 1 else 0
@@ -229,12 +230,12 @@ glmPredAndEval <- function(data.train = NULL,       # data frame as training set
     ref <- c(0, 1, ref)                        # Add preamble (0,1)
     ref <- as.factor(ref)                      # Convert to factor
     ref <- ref[-c(1,2)]                        # Remove preamble
-    # Confusion Matrix
+    # Generate Confusion Matrix:
     # cm <- confusionMatrix(data = cm.pred,
     #                       reference = ref,
     #                       mode = "prec_recall"
     # )
-    # output$cm <- c(output$cm, list(cm))  # push to output list
+    # output$cm <- list(cm)  # push to output list
     
     # (2) table:
     table <- table(ref, cm.pred)
@@ -293,7 +294,7 @@ subsetByDateRange <- function(data = NULL, colname = "Date", dates = NULL) {
     
     data.date <- as.character(data[,colname])
     ixs <- which(data.date>=dates[1] & data.date<=dates[2] )
-   
+    
     return(data[ixs,])
 }
 
@@ -620,6 +621,11 @@ retrieveGlmMeasures <- function(measures = NULL,
     
     set <- tolower(set[1])
     
+    # CM/ConfusionMatrix .............................
+    if (tolower(name[1]) == "cm") {
+        return(measures[[set]][["cm"]])
+    }
+    
     # Tabel .............................
     if (tolower(name[1]) == "table") {
         return(measures[[set]][["table"]])
@@ -649,4 +655,5 @@ retrieveGlmMeasures <- function(measures = NULL,
     
     return(NULL)
 }
+
 
