@@ -82,7 +82,7 @@ measures <- glmComparison(data.base = df.base,
                           date.test = c("2014-01-01", "2015-12-31"),
                           iteration = 5,
                           balance = 1,
-                          mode = 2
+                          mode = 1
                           )
 # measures
 
