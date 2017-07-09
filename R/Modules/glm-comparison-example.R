@@ -83,7 +83,7 @@ measures <- glmComparison(data.base = df.base,
                           iteration = 5,
                           balance = 1,
                           mode = 1
-                          )
+)
 # measures
 
 
@@ -105,6 +105,12 @@ plotGlmMeasures(measures, "Accuracy")
 #   Retrieve performance measures
 #
 # ****************************************************
+
+# 'cm' - confusion matrix :
+cm.base <- retrieveGlmMeasures(measures, "base", "cm")
+cm.base
+cm.ext <- retrieveGlmMeasures(measures, "extend", "cm")
+cm.ext
 
 # 'table' :
 table.base <- retrieveGlmMeasures(measures, "base", "table")
@@ -135,4 +141,5 @@ accuracy.base <- retrieveGlmMeasures(measures, "base", "accuracy")
 accuracy.base
 accuracy.ext <- retrieveGlmMeasures(measures, "extend", "accuracy")
 accuracy.ext
+
 
