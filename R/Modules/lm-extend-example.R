@@ -1,4 +1,4 @@
-# <glm-comparison-example.r> -------------
+# <lm-extend-example.r> -------------
 #
 #  Example to test glm-comparison modules
 #  
@@ -6,7 +6,7 @@
 #
 #------------------------------------------
 
-source("glm-comparison-lib.r")
+source("lm-extend-lib.r")
 
 
 
