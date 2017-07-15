@@ -43,8 +43,9 @@ my.glmfit <- glm(formula = my.formula,
                  data = training,
                  method = "glm.fit",
                  family = binomial(link="logit"),
-                 control = glm.control(epsilon = 1e08, maxit = 10, trace = FALSE)
-                )
+                 # control = glm.control(epsilon = 1e08, maxit = 10, trace = FALSE)
+                 control = glm.control(maxit = 20, trace = FALSE)
+)
 print(my.glmfit)
 
 
