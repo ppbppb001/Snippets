@@ -5,6 +5,10 @@
 # [2016-01-09] - r1: Initial 
 # [2016-01-12] - r2: ouput glm.pred
 # [2016-01-13] - r3: ouput data.train and data.test
+# [2016-01-19] - r4: 1) 'split' added to params list
+#                    2) No subsetting by date when
+#                       mode=1 and no date range 
+#                       is given
 #--------------------------------------------------
 
 library(caret)
@@ -24,7 +28,8 @@ glmComparison <- function(
     date.test = NULL,       # c(start,end), start/end is char as "yyyy-mm-dd", when mode==2
     mode = 1,               # 1=train calc, 2=pred calc
     iteration = 5,          # number of iterations
-    balance = 1             # balance of classification tags
+    balance = 1,            # balance of classification tags
+    split = 0.7             # split ratio of data set for traing
 ){
     
     # (1) Initializations -------------------------------
@@ -33,8 +38,8 @@ glmComparison <- function(
     if (is.null(name.date)) return(NULL)
     if (is.null(name.key)) return(NULL)
     if (is.null(name.class)) return(NULL)
-    if (is.null(date.train)) return(NULL)
     if (mode == 2){
+        if (is.null(date.train)) return(NULL)
         if (is.null(date.test)) return(NULL)
     }
     
@@ -86,13 +91,22 @@ glmComparison <- function(
     }
     
     # Select by range of date:
-    df.b.train <- subsetByDateRange(data = data.base,
-                                    colname = name.date,
-                                    dates = date.train)
-    if (!is.null(df.e)) {
-        df.e.train <- subsetByDateRange(data = df.e,
+    # [r4] ---
+    if (is.null(date.train)) {
+        df.b.train <- data.base
+    } else {
+        df.b.train <- subsetByDateRange(data = data.base,
                                         colname = name.date,
                                         dates = date.train)
+    }
+    if (!is.null(df.e)) {
+        if (is.null(date.train)) {
+            df.e.train <- df.e   
+        } else {
+            df.e.train <- subsetByDateRange(data = df.e,
+                                            colname = name.date,
+                                            dates = date.train)
+        }
     }
     if (mode == 2) {
         df.b.test <- subsetByDateRange(data = data.base,
@@ -104,6 +118,7 @@ glmComparison <- function(
                                            dates = date.test)
         }
     }
+    # ---
     
     # Remove unused columnus = c(date, key):
     # if (!is.null(df.b.train)) {
@@ -121,7 +136,13 @@ glmComparison <- function(
     
     
     # (3) Train/Test looping ------------------------------
-    split <- 0.7                 # split of training vs testing
+    # [r4] --- split ratio of training vs testing
+    if (split > 1) {
+        split <- 1
+    } else {
+        split <- split                 
+    }
+    #---
     for (i in 1:iteration) {
         set.seed(i*100 + i)
         
@@ -557,7 +578,7 @@ plotGlmMeasures <- function(measures = NULL,
             text <- sapply(aucs, function(x) sprintf("AUC = %f",x))            # make AUC labels
             # text <- c(text, " ", " ", " ", " ")                              # padding text with empty lines
             ggp.roc.e <- plotPerformance(perfm = measures$extend$perf.tprfpr,
-                                         title = "ROC Curves (Expand)",
+                                         title = "ROC Curves (Extend)",
                                          text = text)
         } else {
             ggp.roc.e <- NULL
@@ -583,7 +604,7 @@ plotGlmMeasures <- function(measures = NULL,
         # Extended:
         if (length(measures$extend$table) > 0) {
             ggp.recall.e <- plotPerformance(perfm = measures$extend$perf.recall,
-                                            title = "Recall Curves (Expand)")
+                                            title = "Recall Curves (Extend)")
         } else {
             ggp.recall.e <- NULL
         }
@@ -608,7 +629,7 @@ plotGlmMeasures <- function(measures = NULL,
         # Extended:
         if (length(measures$extend$table) > 0) {
             ggp.accerr.e <- plotPerformance(perfm = measures$extend$perf.accerr,
-                                            title = "Accuracy/Error (Expand)")
+                                            title = "Accuracy/Error (Extend)")
         } else {
             ggp.accerr.e <- NULL
         }
