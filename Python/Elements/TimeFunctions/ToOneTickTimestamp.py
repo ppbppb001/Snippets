@@ -49,10 +49,10 @@ dfx2.to_csv('quote_nasdaq_aapl_m1_2011_onetick_ntc_ns.csv',index=None)  # with n
 
 # In[7]:
 
-pd.to_datetime(df2.ix[0,'TIMESTAMP'])
+pd.to_datetime(df2.loc[0,'TIMESTAMP'])
 
 
-# In[9]:
+# In[8]:
 
 df1len = len(df1)
 d1 = np.ones(df1len,dtype=np.int64)
@@ -64,7 +64,7 @@ df2['ONES'] = s1
 df2.head()
 
 
-# In[12]:
+# In[9]:
 
 df3 = pd.read_csv('quote_nasdaq_aapl_m1_2011_onetick_ntc.csv')
 df3.head()
