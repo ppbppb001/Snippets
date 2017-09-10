@@ -63,34 +63,34 @@ dfRes2
 dfX.ID.isin(dfOurs.ColID)
 
 
-# In[9]:
+# In[15]:
 
-dfX.ix[dfX.ID.isin(dfOurs.ColID),'Value'] = np.int64(1)
+dfX.loc[dfX.ID.isin(dfOurs.ColID),'Value'] = np.int64(1)
 dfX
 
 
-# In[12]:
+# In[8]:
 
 dfX[dfX.Value==0.44]
 
 
-# In[11]:
+# In[9]:
 
 print dfX
 
 
-# In[13]:
+# In[10]:
 
 dfRes2
 
 
-# In[40]:
+# In[11]:
 
 print dfRes2.index
 print dfRes2.index[0],dfRes2.index[-1]
 
 
-# In[41]:
+# In[12]:
 
 dfRes2.loc[dfRes2.index[-1]]
 

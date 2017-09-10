@@ -96,7 +96,7 @@ plt.show()
 
 # In[8]:
 
-Image(filename='figure_closea.png')
+# Image(filename='figure_closea.png')
 
 
 # In[9]:
@@ -111,7 +111,7 @@ dfCloseB = gpTest.CLOSE.count().unstack(['KeyP'])  # unstack keyP
 print dfCloseB
 
 
-# In[26]:
+# In[10]:
 
 # 绘图输出 dfCloseB
 dfCloseB.plot(kind='bar',stacked=True)
@@ -122,7 +122,7 @@ plt.show()
 
 # In[11]:
 
-Image(filename='figure_closeb.png')
+# Image(filename='figure_closeb.png')
 
 
 # In[12]:
@@ -146,7 +146,7 @@ plt.show()
 
 # In[14]:
 
-Image(filename='figure_closec.png')
+# Image(filename='figure_closec.png')
 
 
 # In[15]:
@@ -178,7 +178,7 @@ plt.show()
 
 # In[18]:
 
-Image(filename='figure_closea2.png')
+# Image(filename='figure_closea2.png')
 
 
 # In[19]:
@@ -200,7 +200,7 @@ plt.show()
 
 # In[21]:
 
-Image(filename='figure_closec2.png')
+# Image(filename='figure_closec2.png')
 
 
 # In[22]:
@@ -216,7 +216,7 @@ print
 
 #Row=2,Col=1
 print '[row=2,col=1] by iloc[1,0] = ',dfCloseC.iloc[1,0]  
-print '[row=2,col=1] by ix[12,0] = ',dfCloseC.ix[12,0]
+print '[row=3,col=1] by iloc[2,0] = ',dfCloseC.iloc[2,0]
 
 
 # In[23]:
@@ -256,7 +256,8 @@ print 'unstacked:\n',dfCloseA2
 print
 
 dfCloseA2 = dfCloseA.copy()
-dfCloseA2.sortlevel(level=1,ascending=False,sort_remaining=False,inplace=True) #按KeyP降序
+# dfCloseA2.sortlevel(level=1,ascending=False,sort_remaining=False,inplace=True) #按KeyP降序 # Obsoleted!!!
+dfCloseA2.sort_index(level=1,ascending=False,sort_remaining=False,inplace=True) #按KeyP降序
 print 'After sorting:\n',dfCloseA2
 dfCloseA2 = dfCloseA2.unstack(['KeyP','KeyV'])
 print 'unstacked:\n',dfCloseA2

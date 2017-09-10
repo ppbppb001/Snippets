@@ -374,17 +374,18 @@ print 'Source DataFrame:\n',dfSrc
 print 
 
 # 按列C1升序
-dfOut = dfSrc.sort(columns='C1',ascending=True)
+dfOut = dfSrc.sort_values('C1',ascending=True)
 print 'Sort: Ascending by column C1\n',dfOut
 print
 
+
 # 按列C2降序
-dfOut = dfSrc.sort(columns='C2',ascending=False)
+dfOut = dfSrc.sort_values('C2',ascending=False)
 print 'Sort: Descending by column C2\n',dfOut
 print
 
 # 按列C3降序, 改变原DataFrame:dfSrc
-dfSrc.sort(columns='C3',ascending=False,inplace=True)
+dfSrc.sort_values('C3',ascending=False,inplace=True)
 print 'Sort: Descending by column C3, inplace=True\n',dfSrc
 print
 
@@ -411,12 +412,12 @@ print 'Source Series:\n',seSrc
 print 
 
 # 数值降序 (descending by values)
-seSrc.sort(axis=0,ascending=False)  #缺省是inplace=True
+seSrc.sort_values(axis=0,ascending=False)  #缺省是inplace=True
 print 'Sort: Descending by values\n',seSrc
 print
 
 # 数值升序 (ascending by values)
-seSrc.sort(axis=0,ascending=True)  #缺省是inplace=True
+seSrc.sort_values(axis=0,ascending=True)  #缺省是inplace=True
 print 'Sort: Ascending by values\n',seSrc
 print
 

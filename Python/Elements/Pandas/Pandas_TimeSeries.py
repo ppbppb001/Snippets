@@ -230,14 +230,16 @@ df2feb = df2['2011-02-01':'2011-02-28']
 # <Step-2.1> 
 # df3c: 由df2feb.CLOSE生成的只有一列的DataFrame
 #       Frequency: 1min to 10min, sampling_method=mean (for close price)
-df3c = df2feb[['CLOSE']].resample(rule='10T',how='mean')                 #方法-1
+# df3c = df2feb[['CLOSE']].resample(rule='10T',how='mean')                 #方法-1
 # df3c = pd.DataFrame(df2feb['CLOSE']).resample(rule='10T',how='mean')   #方法-2
+df3c = df2feb[['CLOSE']].resample(rule='10T').mean()                 #方法-3
 
 # <Step-2.2>
 # df3v: 由df2feb.VOLUME生成的只有一列的DataFrame
 #       Frequency: 1min to 10min, sampling_method=sum (for volume value)
-df3v = df2[['VOLUME']].resample(rule='10T',how='mean')                #方法-1
+# df3v = df2[['VOLUME']].resample(rule='10T',how='mean')                #方法-1
 # df3v = pd.DataFrame(df2['VOLUME']).resample(rule='10T',how='sum')   #方法-2
+df3v = df2[['VOLUME']].resample(rule='10T').mean()                #方法-3
 
 # <Step3>
 # 输出
@@ -271,14 +273,15 @@ df2feb = df2['2011-02-01':'2011-02-28']
 # <Step-2.1>
 # 由df2feb.CLOSE生成的只有一列的DataFrame: df4c
 # Frequency: 1min -> 1s, fill_method: forward filling (eliminate Nan)
-df4c = df2feb[['CLOSE']].resample(rule='1S',fill_method='ffill')               #方法-1
+# df4c = df2feb[['CLOSE']].resample(rule='1S',fill_method='ffill')               #方法-1
 # df4c = pd.DataFrame(df2feb['CLOSE']).resample(rule='s',fill_method='ffill')  #方法-2
+df4c = df2feb[['CLOSE']].resample(rule='1S').ffill()               #方法-3
 
 # <Step-2.2>
 # 由df2feb.VOLUME生成的只有一列的DataFrame: df4v
 # Frequency: 1min -> 1s, fill_method: NONE
-df4v = df2feb[['VOLUME']].resample(rule='1S')               #方法-1
-# df4v = pd.DataFrame(df2feb['VOLUME']).resample(rule='s')  #方法-2
+# df4v = df2feb[['VOLUME']].resample(rule='1S')               #方法-1# df4v = pd.DataFrame(df2feb['VOLUME']).resample(rule='s')  #方法-2
+df4v = df2feb[['VOLUME']].resample(rule='1S').asfreq()        #方法-2  for new version of pandas
 # 处理NaN
 df4v.fillna(value=0,inplace=True)   # NaN->0, 回写新数值，方法-1
 # df4v = df4v.fillna(0)             # 方法-2，作用同上
@@ -313,9 +316,11 @@ df4x
 df2feb = df2['2011-02-01':'2011-02-28']
 
 # Upsampling to produce NaN
-df5c = df2feb[['CLOSE']].resample(rule='1S')
+# df5c = df2feb[['CLOSE']].resample(rule='1S') 
+df5c = df2feb[['CLOSE']].resample(rule='1S').asfreq()
 # df5c
-df5v = df2feb[['VOLUME']].resample(rule='1S')
+# df5v = df2feb[['VOLUME']].resample(rule='1S')
+df5v = df2feb[['VOLUME']].resample(rule='1S').asfreq()
 # df5v
 
 # Drop Nan
@@ -330,15 +335,14 @@ df5c.fillna(method='ffill',inplace=True)  #forward filling, 方法-1
 
 # Assigning a vaule
 df5v.fillna(value=0,inplace=True)   # NaN->0, 方法-1
-# df5v = df5v.fillna(0)             # 方法-2   
+# df5v = df5v.fillna(value=0)             # 方法-2   
 # df5v
 
-
 # Process DataFrame with multiple columns
-df5feb = df2feb.resample(rule='1S')
+df5feb = df2feb.resample(rule='1S').asfreq()
 # df5feb
 df5feb['CLOSE'].fillna(method='ffill',inplace=True)  #处理CLOSE列的NaN: forward filling
-df5feb['VOLUME'].fillna(value=0,inplace=True)   #处理VOLUME列的NaN: NaN->0
+df5feb['VOLUME'].fillna(value=0, inplace=True)   #处理VOLUME列的NaN: NaN->0
 df5feb
 
 

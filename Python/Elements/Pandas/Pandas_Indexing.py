@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[2]:
+# In[1]:
 
 import datetime
 import time
@@ -12,14 +12,14 @@ import numpy as np
 import matplotlib
 
 
-# In[3]:
+# In[2]:
 
 # df1 = pd.read_csv("quote_nasdaq_aapl_m1_2011.csv")
 # dlen = len(df1)
 # print dlen
 
 
-# In[4]:
+# In[3]:
 
 #---------------------------------------------------
 # Load a CSV file to a DataFrame
@@ -38,11 +38,11 @@ print "df_len =",len(df1)
 # Column = VOLUME
 
 # by column name
-sel = df1.ix[:,"VOLUME"]
+sel = df1.loc[:,"VOLUME"]
 print "Test-1.1:\n",sel,"\n"
 
 # by coulumn index
-sel = df1.ix[:,7]    # col-7=VOLUME
+sel = df1.iloc[:,7]    # col-7=VOLUME
 print "Test-1.2:\n",sel,"\n"
 
 # by column name
@@ -62,15 +62,15 @@ print "Test-1.4:\n",sel,"\n"
 # Column = OPEN,CLOSE,VOLUME
 
 # by column names
-sel = df1.ix[:,["OPEN","CLOSE","VOLUME"]]
+sel = df1.loc[:,["OPEN","CLOSE","VOLUME"]]
 print "Test-2.1:\n",sel,"\n"
 
 # by column indices
-sel = df1.ix[:,[3,6,7]]     # Col-3=OPEN, Col-6=CLOSE, Col-7=VOLUME
+sel = df1.iloc[:,[3,6,7]]     # Col-3=OPEN, Col-6=CLOSE, Col-7=VOLUME
 print "Test-2.2:\n",sel,"\n"
 
 #  by column indices
-sel = df1[[3,6,7]]     # Col-3=OPEN, Col-6=CLOSE, Col-7=VOLUME
+sel = df1.iloc[[3,6,7]]     # Col-3=OPEN, Col-6=CLOSE, Col-7=VOLUME
 print "Test-2.3:\n",sel,"\n"
 
 
@@ -87,22 +87,22 @@ sel = df1[0:10]  # row-0 to row-9
 print "Test-3.1.1:\n",sel,"\n"
 
 # Method-2:
-sel = df1.ix[0:9,:] # row-0 to row-9
+sel = df1.iloc[0:9,:] # row-0 to row-9
 print "Test-3.1.2:\n",sel,"\n"
 
 
 # Sample-2: by index of row with multiple columns ................
 
 # Method-1: columns by name
-sel = df1.ix[0:9,["OPEN","CLOSE","VOLUME"]]
+sel = df1.loc[0:9,["OPEN","CLOSE","VOLUME"]]
 print "Test-3.2.1:\n",sel,"\n"
 
 # Method-2: columns by index
-sel = df1.ix[0:9,[3,6,7]]
+sel = df1.iloc[0:9,[3,6,7]]
 print "Test-3.2.2:\n",sel,"\n"
 
 # Method-3: columns by range
-sel = df1.ix[0:9,3:8]  # row0-9,col3-7
+sel = df1.iloc[0:9,3:8]  # row0-9,col3-7
 print "Test-3.2.3:\n",sel,"\n"
 
 
@@ -112,16 +112,16 @@ print "Test-3.2.3:\n",sel,"\n"
 # Test-4: Select multiple rows by index
 #--------------------------------------
 
-sel = df1.ix[[0,2,4,6],:]
+sel = df1.iloc[[0,2,4,6],:]
 print "Test-4.1:\n",sel,"\n"
 
-sel = df1.ix[[0,2,4,6],3:8]
+sel = df1.iloc[[0,2,4,6],3:8]
 print "Test-4.2:\n",sel,"\n"
 
-sel = df1.ix[[0,2,4,6],[3,6,7]]
+sel = df1.iloc[[0,2,4,6],[3,6,7]]
 print "Test-4.3:\n",sel,"\n"
 
-sel = df1.ix[[0,2,4,6],["OPEN","CLOSE","VOLUME"]]
+sel = df1.loc[[0,2,4,6],["OPEN","CLOSE","VOLUME"]]
 print "Test-4.4:\n",sel,"\n"
 
 
@@ -135,41 +135,40 @@ print "Test-4.4:\n",sel,"\n"
 sel = df1[(df1.TIME>=1000) & (df1.TIME<1005)]    # All of the records from 10:00 to 10:05
 print "Test-5.1.1:\n",sel,"\n"
 
-sel = df1.ix[(df1.TIME>=1000) & (df1.TIME<1005),:]    # All of the records from 10:00 to 10:05
+sel = df1.loc[(df1.TIME>=1000) & (df1.TIME<1005),:]    # All of the records from 10:00 to 10:05
 print "Test-5.1.2:\n",sel,"\n"
 
-sel = df1.ix[(df1.CLOSE>=400) & (df1.CLOSE<405),:]    # All of the records with CLOSE from 400.00 to 405.00
+sel = df1.loc[(df1.CLOSE>=400) & (df1.CLOSE<405),:]    # All of the records with CLOSE from 400.00 to 405.00
 print "Test-5.1.3:\n",sel,"\n"
 
-
 # Select rows by conditions and columns by series
-sel = df1.ix[(df1.TIME>=1000) & (df1.TIME<1005),["OPEN","CLOSE","VOLUME"]]    # All of the records from 10:00 to 10:05 with OPEN/CLOSE/VOLUME
+sel = df1.loc[(df1.TIME>=1000) & (df1.TIME<1005),["OPEN","CLOSE","VOLUME"]]    # All of the records from 10:00 to 10:05 with OPEN/CLOSE/VOLUME
 print "Test-5.2.1:\n",sel,"\n"
 
-sel = df1.ix[(df1.TIME>=1000) & (df1.TIME<1005),[3,6,7]]    # All of the records from 10:00 to 10:05 with OPEN/CLOSE/VOLUME
-print "Test-5.2.2\n",sel,"\n"
 
-sel = df1.ix[(df1.CLOSE>=400) & (df1.CLOSE<405),["DATE","CLOSE","VOLUME"]]    # All of the records with CLOSE from 400.00 to 405.00
+# In[9]:
+
+sel = df1.loc[(df1.CLOSE>=400) & (df1.CLOSE<405),["DATE","CLOSE","VOLUME"]]    # All of the records with CLOSE from 400.00 to 405.00
 print "Test-5.2.3:\n",sel,"\n"
 
 
+# In[10]:
 
-# In[17]:
-
-sel = df1.ix[(df1.index>=814) & (df1.TIME>=1000) & (df1.TIME<1005)]    # All of the records from 10:00 to 10:05
+sel = df1[(df1.index>=814) & (df1.TIME>=1000) & (df1.TIME<1005)]    # All of the records from 10:00 to 10:05
 print "Test-5.1.1:\n",sel,"\n"
 print sel.index
 print sel.index[0], sel.index[len(sel)-1]
 
 
-# In[ ]:
+# In[11]:
 
 df2=df1[0:10]   # Actually no copying happened! df2 is only referenced to part of df1 by given range
+print df2
 
 
-# In[18]:
+# In[12]:
 
-df1.ix[1,"VOLUME"] += 10   # one cell of df1 is modified
-print df1.ix[1,"VOLUME"]  # check the change
+df1.loc[1,"VOLUME"] += 10   # one cell of df1 is modified
+print df1.loc[1,"VOLUME"]  # check the change
 print df2                 # the corresponding cell in df2 should be changed as well
 
