@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[2]:
+# In[1]:
 
 
 # DateTime Functions Part-1 
@@ -143,7 +143,7 @@ print 'From: tt_sydx = ',tt_sydx, '| timezone = ',tt_sydx.tzinfo
 print '  To: tt_hkx =  ',tt_hkx, '| timezone = ',tt_hkx.tzinfo
 
 
-# In[5]:
+# In[8]:
 
 
 #-----------------------------------------------------------------
@@ -187,7 +187,7 @@ ts_utc1 = int(calendar.timegm(tt_utc1.timetuple())) #ts_utc1 for time bucket all
 print 'UTC: ',tt_utc1, ts_utc1
 
 
-# In[22]:
+# In[10]:
 
 
 #-------------------------------------------------
@@ -208,10 +208,4 @@ ddtx =  dtx2 - dtx1                 # Difference of 2 datetime objects
 print "\n",type(ddtx)               # ddtx is a timedelta object
 print ddtx.days, "day(s) plus",ddtx.seconds,"second(s)"  # difference in days plus seconds
 print "total",ddtx.total_seconds(),"second(s)"           # difference in seconds
-
-
-# In[7]:
-
-
-
 
