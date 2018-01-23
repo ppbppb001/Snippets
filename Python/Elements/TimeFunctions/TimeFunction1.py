@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[1]:
+# In[2]:
 
 
 # DateTime Functions Part-1 
@@ -143,7 +143,7 @@ print 'From: tt_sydx = ',tt_sydx, '| timezone = ',tt_sydx.tzinfo
 print '  To: tt_hkx =  ',tt_hkx, '| timezone = ',tt_hkx.tzinfo
 
 
-# In[8]:
+# In[5]:
 
 
 #-----------------------------------------------------------------
@@ -157,20 +157,29 @@ datestr = '12/30/2010'
 timestr = '930'
 dtstr = datestr+' '+timestr
 print 'From: ',dtstr
-ttx = datetime.datetime.strptime(dtstr,'%m/%d/%Y %H%M')
+ttx = datetime.datetime.strptime(dtstr,'%m/%d/%Y %H%M') # ttx is a datetime object
 print '  To: ',ttx
 print
 
 # datetime对象->日期时间字符串
 #
-dtstr2 = ttx.strftime('%Y/%m/%d %H:%M:%S')
+dtstr2 = ttx.strftime('%Y/%m/%d %H:%M:%S')   # datetime object -> formatted string
 print 'From: ',ttx
 print '  To: ',dtstr2
+#
+dtstr2_date = ttx.strftime("%Y-%m-%d")       # datetime object -> formatted string
+print "Date: ",dtstr2_date
+# 
+dtstr2_time = ttx.strftime("%H:%M:%S")       # datetime object -> formatted string
+print "Time: ",dtstr2_time
 
 
 # In[9]:
 
 
+#----------------------------------------------------
+# Convert to UTC timezone
+#----------------------------------------------------
 tt_trade1 = datetime.datetime(2015, 6, 7, 9, 30, 0)
 tt_hk1 = tz_hk.localize(tt_trade1) #Hong Kong time zone trade time
 tt_utc1 = tt_hk1.astimezone(tz_utc) #convert to UTC time zone
@@ -178,23 +187,31 @@ ts_utc1 = int(calendar.timegm(tt_utc1.timetuple())) #ts_utc1 for time bucket all
 print 'UTC: ',tt_utc1, ts_utc1
 
 
-# In[28]:
+# In[22]:
 
 
 #-------------------------------------------------
 # Difference of two datetime strings
 #-------------------------------------------------
 
-dtstr1 = "2006-01-02 10:11:12.12345"
+dtstr1 = "2006-01-02 10:08:12.12345"
 dtx1 = datetime.datetime.strptime(dtstr1, "%Y-%m-%d %H:%M:%S.%f") # string -> datetime object
 print dtx1
+print "year=",dtx1.year, "month=",dtx1.month, "day=",dtx1.day, "hour=",dtx1.hour, "minute=",dtx1.minute   # output elements of dtx1
 
-dtstr2 = "2006-01-04 08:11:12.12345"
+dtstr2 = "2006-01-04 08:15:10.12345"
 dtx2 = datetime.datetime.strptime(dtstr2, "%Y-%m-%d %H:%M:%S.%f") # string -> datetime object
 print dtx2
+print "year=",dtx2.year, "month=",dtx2.month, "day=",dtx2.day, "hour=",dtx2.hour, "minute=",dtx2.minute   # output elements of dtx2
 
-ddtx =  dtx2 - dtx1            # Difference of 2 datetime objects
-print type(ddtx)               # ddtx is a timedelta object
-print ddtx.days, ddtx.seconds  # difference in days plus seconds
-print ddtx.total_seconds()     # difference in seconds
+ddtx =  dtx2 - dtx1                 # Difference of 2 datetime objects
+print "\n",type(ddtx)               # ddtx is a timedelta object
+print ddtx.days, "day(s) plus",ddtx.seconds,"second(s)"  # difference in days plus seconds
+print "total",ddtx.total_seconds(),"second(s)"           # difference in seconds
+
+
+# In[7]:
+
+
+
 
