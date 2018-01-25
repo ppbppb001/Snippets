@@ -27,10 +27,14 @@ codes = np.random.randint(low=1,
                           high=total_unit, 
                           size=total_record)
 lst_code = ["%4.4d"%(x) for x in codes] 
-lst_timestamp = np.random.randint(low=timestamp_low,
-                                  high=timestamp_high,
-                                  size=total_record)
+
+# lst_timestamp = np.random.randint(low=timestamp_low,
+#                                   high=timestamp_high,
+#                                   size=total_record)
+x = np.random.random(total_record)
+lst_timestamp = (timestamp_high - timestamp_low)*x + timestamp_low
 lst_datetime = [str(dt.datetime.fromtimestamp(x)) for x in lst_timestamp]
+
 dfData = pd.DataFrame(data=zip(lst_code, lst_datetime), columns=["Code", "DateTime"])
 dfData
 
@@ -49,7 +53,7 @@ for code in codeTable:
     chk = dfData["Code"].isin([code])
     dfSub = dfData[chk]
     
-    dts = [dt.datetime.strptime(x,"%Y-%m-%d %H:%M:%S") for x in dfSub["DateTime"].values]
+    dts = [dt.datetime.strptime(x,"%Y-%m-%d %H:%M:%S.%f") for x in dfSub["DateTime"].values]
     tss = [tm.mktime(x.timetuple()) for x in dts]
     tss_min = min(tss)
     tss_max = max(tss)
