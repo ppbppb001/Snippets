@@ -43,10 +43,11 @@ print dfData.tail()
 # In[3]:
 
 
+# Generate a new column of timestamp:
+
 tk1 = tm.clock()
 
-ts = dfData['DateTime'].apply(lambda x: dt.datetime.strptime(x,"%Y-%m-%d %H:%M:%S.%f"))  # datatime strint -> timestamp long int
-dfData['TimeStamp'] = ts   # append timestamp as a new column of dfData
+dfData['TimeStamp'] = pd.to_datetime(dfData['DateTime'])   # append timestamp as a new column of dfData
 
 tk2 = tm.clock()
 print dfData.head()
@@ -56,6 +57,8 @@ print 'time counsumed = %1.3f(s)'%(tk2-tk1)
 
 # In[4]:
 
+
+# Calculate time span of each group/code:
 
 tk3= tm.clock()
 
@@ -77,7 +80,7 @@ print '\ntotal time consumed = %1.3f(s)'%((tk2-tk1)+(tk4-tk3))
 # In[5]:
 
 
-# retrieve by code:
+# retrieve time span by code:
 
 codex = '00000010'     # code = '00000010' 
 diffx = sdiff[codex]   # time-delta = diffx
