@@ -1,3 +1,10 @@
+# <ggplot2-multiple-plots.r> ----------------------
+#
+#   Overlapped plotting
+#
+#   [2018-06-21] - startup
+#-----------------------------------------------
+
 library(ggplot2)
 
 # Data
