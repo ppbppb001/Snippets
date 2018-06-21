@@ -38,10 +38,13 @@ myColor3 <- "#8da0cb"
 myColor4 <- "#e78ac3"
 myColor5 <- "#a6d854"
 
+alpha.contour <- 0.4
+
 
 # Plot 'd1' only
 g1 <- ggplot(data=dumb, aes(x=x, y=y)) +
         stat_density2d(data=d1, aes(fill="Data-1", alpha=..density..), geom='raster', contour=FALSE) +
+        stat_density2d(data=d1, color=myColor1, alpha = alpha.contour, contour=TRUE) +
         xlim(x.min, x.max) + 
         ylim(y.min, y.max) +
         scale_fill_manual(values = myColor1)
@@ -50,6 +53,7 @@ g1
 # Plot 'd2' only
 g2 <- ggplot(data=dumb, aes(x=x, y=y)) +
         stat_density2d(data=d2, aes(fill="Data-2", alpha=..density..), geom='raster', contour=FALSE) +
+        stat_density2d(data=d2, color=myColor2, alpha = alpha.contour, contour=TRUE) +
         xlim(x.min, x.max) + 
         ylim(y.min, y.max) +
         scale_fill_manual(values = myColor2)
@@ -58,6 +62,7 @@ g2
 # Plot 'd3' only
 g3 <- ggplot(data=dumb, aes(x=x, y=y)) +
         stat_density2d(data=d3, aes(fill="Data-3", alpha=..density..), geom='raster', contour=FALSE) +
+        stat_density2d(data=d3, color=myColor3, alpha = alpha.contour, contour=TRUE) +
         xlim(x.min, x.max) + 
         ylim(y.min, y.max) +
         scale_fill_manual(values = myColor3)
@@ -67,7 +72,9 @@ g3
 # Plot 'd1' on top of 'd2'
 g12 <- ggplot(data=dumb, aes(x=x, y=y)) +
         stat_density2d(data=d2, aes(alpha=..density.., fill="Data-2"), geom='raster', contour=FALSE) +
+        stat_density2d(data=d2, color=myColor2, alpha = alpha.contour, contour=TRUE) +
         stat_density2d(data=d1, aes(alpha=..density.., fill="Data-1"), geom='raster', contour=FALSE) +
+        stat_density2d(data=d1, color=myColor1, alpha = alpha.contour, contour=TRUE) +
         xlim(x.min, x.max) + 
         ylim(y.min, y.max) +
         scale_fill_manual(values = c(myColor1, myColor2))
@@ -76,7 +83,9 @@ g12
 # Plot 'd2' on top of 'd1'
 g21 <- ggplot(data=dumb, aes(x=x, y=y)) +
         stat_density2d(data=d1, aes(alpha=..density.., fill="Data-1"), geom='raster', contour=FALSE) +
+        stat_density2d(data=d1, color=myColor1, alpha = alpha.contour, contour=TRUE) +
         stat_density2d(data=d2, aes(alpha=..density.., fill="Data-2"), geom='raster', contour=FALSE) +
+        stat_density2d(data=d2, color=myColor2, alpha = alpha.contour, contour=TRUE) +
         xlim(x.min, x.max) + 
         ylim(y.min, y.max) +
         scale_fill_manual(values = c(myColor1, myColor2))
@@ -86,8 +95,11 @@ g21
 # Plot 'd1' on top of 'd2' and 'd2' on top of 'd3'
 g123 <- ggplot(data=dumb, aes(x=x, y=y)) +
         stat_density2d(data=d3, aes(alpha=..density.., fill="Data-3"), geom='raster', contour=FALSE) +
+        stat_density2d(data=d3, color=myColor3, alpha = alpha.contour, contour=TRUE) +
         stat_density2d(data=d2, aes(alpha=..density.., fill="Data-2"), geom='raster', contour=FALSE) +
+        stat_density2d(data=d2, color=myColor2, alpha = alpha.contour, contour=TRUE) +
         stat_density2d(data=d1, aes(alpha=..density.., fill="Data-1"), geom='raster', contour=FALSE) +
+        stat_density2d(data=d1, color=myColor1, alpha = alpha.contour, contour=TRUE) +
         xlim(x.min, x.max) + 
         ylim(y.min, y.max) +
         scale_fill_manual(values = c(myColor1, myColor2, myColor3))
