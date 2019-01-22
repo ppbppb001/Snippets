@@ -3,14 +3,16 @@
 #   Overlapped plotting
 #
 #   [2018-06-21] - startup
+#   [2019-01-22] = Scatter points plotting added
 #-----------------------------------------------
+
 
 library(ggplot2)
 
 # Data
 d1 <- data.frame( x=rnorm(20000, 10, 1.9), y=rnorm(20000, 10, 1.2) )
 d2 <- data.frame( x=rnorm(20000, 11.5, 1.9), y=rnorm(20000, 11.5, 1.2) )
-d3 <- data.frame( x=rnorm(20000, 9.5, 1.9), y=rnorm(20000, 15.5, 1.9) )
+d3 <- data.frame( x=rnorm(2000, 9.5, 1.9), y=rnorm(2000, 15.5, 1.9) )
 
 # Define the range/limitation of the plots
 x.min <- min(min(d1["x"]), min(d2["x"]), min(d3["x"])) - 1
@@ -39,6 +41,7 @@ myColor4 <- "#e78ac3"
 myColor5 <- "#a6d854"
 
 alpha.contour <- 0.4
+alpha.point <- 0.05
 
 
 # Plot 'd1' only
@@ -102,7 +105,36 @@ g123 <- ggplot(data=dumb, aes(x=x, y=y)) +
         stat_density2d(data=d1, color=myColor1, alpha = alpha.contour, contour=TRUE) +
         xlim(x.min, x.max) + 
         ylim(y.min, y.max) +
+        guides(fill = guide_legend(title = "Set")) +
+        guides(alpha = guide_legend(title = "Scale", keyheight = 3))+
+        # labs(fill="Set", alpha="Scale") +
         scale_fill_manual(values = c(myColor1, myColor2, myColor3))
 g123
 
+
+# Plot points:  Plot 'd1' on top of 'd2' and 'd2' on top of 'd3'
+# With legends
+g123.2 <- ggplot(data=dumb, aes(x=x, y=y)) +
+        geom_point(data = d1, aes(color = "Data-1"), alpha = 0.05, size = 1) +
+        geom_point(data = d2, aes(color = "Data-2"), alpha = 0.05, size = 1) +
+        geom_point(data = d3, aes(color = "Data-3"), alpha = 0.05, size = 1) +
+        xlim(x.min, x.max) +
+        ylim(y.min, y.max) +
+        guides(color = guide_legend(title = "Data Set")) +
+        annotate("text", x=x.max-3, y=y.max, label="Data-1", color=myColor1) +
+        annotate("text", x=x.max-3, y=y.max-1, label="Data-2", color=myColor2) +
+        annotate("text", x=x.max-3, y=y.max-2, label="Data-3", color=myColor3) +
+        scale_color_manual(values = c(myColor1, myColor2, myColor3))
+g123.2
+# Without legends
+g123.3 <- ggplot(data=dumb, aes(x=x, y=y)) +
+    geom_point(data = d1, color = myColor1, alpha = 0.05, size = 1) +
+    geom_point(data = d2, color = myColor2, alpha = 0.05, size = 1) +
+    geom_point(data = d3, color = myColor3, alpha = 0.2, size = 3) +
+    xlim(x.min, x.max) +
+    ylim(y.min, y.max) +
+    annotate("text", x=x.max-3, y=y.max, label="Data-1", color=myColor1) +
+    annotate("text", x=x.max-3, y=y.max-1, label="Data-2", color=myColor2) +
+    annotate("text", x=x.max-3, y=y.max-2, label="Data-3", color=myColor3)
+g123.3
 
