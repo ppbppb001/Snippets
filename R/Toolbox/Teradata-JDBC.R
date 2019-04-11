@@ -7,7 +7,7 @@ drv <- JDBC("com.teradata.jdbc.TeraDriver",
             "c:\\progtools\\R\\terajdbc\\terajdbc4.jar;c:\\progtools\\R\\terajdbc\\tdgssconfig.jar")
 
 
-# Check the path of java classes
+#--- [Optional codes]: Check the path of java classes ---
 jclass <- .jclassPath()
 print (jclass)
 # Console output:
@@ -16,7 +16,7 @@ print (jclass)
 # [3] "c:\\progtools\\R\\terajdbc\\tdgssconfig.jar"               
 # [4] "C:\\ProgTools\\R\\R-3.5.3\\library\\RJDBC\\java\\RJDBC.jar"
 
-#--- [Optional codes] Test existing of the java files ---
+#--- [Optional codes]: Test existing of the java files ---
 for (path in jclass) {
     print (path)
     print (file.exists(path))
