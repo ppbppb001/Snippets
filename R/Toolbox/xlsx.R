@@ -11,6 +11,9 @@ write.xlsx(df.iris, file = "iris-test.xlsx",
 wb <- loadWorkbook("iris-test.xlsx")
 sheets <- getSheets(wb)
 sheet <- sheets[[1]]
+rowcnt <- length(getCells(row = getRows(sheet), colIndex = 1))
+colcnt <- length(getCells(row = getRows(sheet, rowIndex = 1)))
+
 
 #---[Plan-2] Create workbook from data frame ----
 # wb <- createWorkbook()
@@ -27,7 +30,7 @@ fi2 <- Fill(foregroundColor = color2)  # setup dark stripe
 cs2 <- CellStyle(wb, fill = fi2)
 
 # Traverse rows and paint the stripes
-for (i in 2:(nrow(df.iris)+1)) {
+for (i in 2:rowcnt) {
   rows <- getRows(sheet, rowIndex = i)
   cells <- getCells(rows, colIndex = 2:5)  # get cells other than those of col-1
   if (bitwAnd(i,1) == 0){
@@ -64,7 +67,7 @@ css <- c(
          list(CellStyle(wb, fill = Fill(foregroundColor = "#e5f5f9"))) 
         )  # background colors of cell to reflect the levels
 
-rows <- getRows(sheet, rowIndex = 2:(nrow(df.iris)+1))
+rows <- getRows(sheet, rowIndex = 2:rowcnt)
 cells <- getCells(rows, colIndex = 1)  # cells of col-1
 values <- lapply(cells, getCellValue)     
 for (ix in names(values)) {
@@ -100,7 +103,7 @@ setRowHeight(rows, multiplier = 1.5)  # set to 1.5 times of default row height
 
 
 #--- Adjust column width ---
-autoSizeColumn(sheet, colIndex = 1:(ncol(df.iris)+1))
+autoSizeColumn(sheet, colIndex = 1:colcnt)
 
 
 #--- Save result to another XLS file ---
