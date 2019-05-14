@@ -146,7 +146,25 @@ g123.3
 
 
 # [3]-----------------------------------------------------------------------------------
-# Plot points in log scale:
+# Plot points in log scale: single data set
+g1.10 <- ggplot(data=dumb, aes(x=x, y=y)) +
+    geom_point(data = d1, aes(color = "Data-1"), alpha = 0.05, size = 1) +
+    xlim(x.min, x.max) +
+    ylim(y.min, y.max) +
+    guides(color = guide_legend(title = "Data Set")) +
+    annotate("text", x=x.max-3, y=y.max, label="Data-1", color=myColor1) +
+    scale_color_manual(values = c(myColor1, myColor2, myColor3))
+# Linear mapping
+g1.10
+# Log10 mapping in range of '1 to x.max or y.max'
+g1.10 + scale_x_log10(breaks = c(1,2,5,10,20,50,100), limits = c(min(1,x.min),x.max)) + 
+    scale_y_log10(breaks = c(2,5,10,20,50,100), limits = c(min(1,y.min), y.max))
+# Log10 mapping in range of 'x.min to x.max and y.min to y.max'
+g1.10 + scale_x_log10(breaks = c(1,2,5,10,20,50,100), limits = c(x.min,x.max)) + 
+    scale_y_log10(breaks = c(2,5,10,20,50,100), limits = c(y.min, y.max))
+
+
+# Plot points in log scale: multiple data set
 g123.10 <- ggplot(data=dumb, aes(x=x, y=y)) +
     geom_point(data = d1, aes(color = "Data-1"), alpha = 0.05, size = 1) +
     geom_point(data = d2, aes(color = "Data-2"), alpha = 0.05, size = 1) +
@@ -158,14 +176,11 @@ g123.10 <- ggplot(data=dumb, aes(x=x, y=y)) +
     annotate("text", x=x.max-3, y=y.max-1, label="Data-2", color=myColor2) +
     annotate("text", x=x.max-3, y=y.max-2, label="Data-3", color=myColor3) +
     scale_color_manual(values = c(myColor1, myColor2, myColor3))
-
 # Linear mapping
 g123.10   
-
 # Log10 mapping in range of '1 to x.max or y.max'
 g123.10 + scale_x_log10(breaks = c(1,2,5,10,20,50,100), limits = c(min(1,x.min),x.max)) + 
           scale_y_log10(breaks = c(2,5,10,20,50,100), limits = c(min(1,y.min), y.max))
-
 # Log10 mapping in range of 'x.min to x.max and y.min to y.max'
 g123.10 + scale_x_log10(breaks = c(1,2,5,10,20,50,100), limits = c(x.min,x.max)) + 
     scale_y_log10(breaks = c(2,5,10,20,50,100), limits = c(y.min, y.max))
