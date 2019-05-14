@@ -33,10 +33,10 @@ colcnt <- length(df[1,])
 #--- Plot background stripes ---
 color1 <- "#f7fbff"
 color2 <- "#c6dbef"
-style1 <- createStyle(fgFill = color1)
-style2 <- createStyle(fgFill = color2)
-rows1 <- as.integer(seq(from=2, to=rowcnt+1, by=2))
-rows2 <- as.integer(seq(from=3, to=rowcnt+1, by=2))
+style1 <- createStyle(fgFill = color1) # style for odd line number
+style2 <- createStyle(fgFill = color2) # style for even line number
+rows1 <- as.integer(seq(from=2, to=rowcnt+1, by=2))  # odd rows
+rows2 <- as.integer(seq(from=3, to=rowcnt+1, by=2))  # even rows
 for (i in 1:colcnt) {
     addStyle(wb, sheet = 1, 
              cols = i, rows = rows1, 
@@ -65,9 +65,9 @@ values <- df[,1]
 for (i in 1:rowcnt) {
     x <- df[i,1]
     ix <- findInterval(x, ss)
-    addStyle(wb, sheet=1, cols=1, rows=i+1, style = css[[ix]])
+    addStyle(wb, sheet=1, cols=1, rows=i+1, style = css[[ix]])  # mark the value by color shades
     if (x>=5) {
-        addStyle(wb, sheet=1, cols=1, rows=i+1, style=style3, stack = TRUE )
+        addStyle(wb, sheet=1, cols=1, rows=i+1, style=style3, stack = TRUE ) # mark special value with bold font
     }
 }
 
