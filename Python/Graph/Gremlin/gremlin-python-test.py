@@ -99,21 +99,21 @@ print ('Version of gremlin server is ',x)
 # ****************************************************
 
 
-# In[5]:
+# In[ ]:
 
 
 # --- Create graph on the remote gremlin server: ---
-# res = client.submit("graph = TinkerGraph.open()")
-res = client.submit("graph = JanusGraphFactory.open('inmemory')")
-CheckResult(res)     # Ignore the 'rasised GremlinServerError' message and go ahead
+# res = client.submit("graph = TinkerGraph.open()")                  # with Gremlin Server
+# res = client.submit("graph = JanusGraphFactory.open('inmemory')")  # with JanusGraph
+# CheckResult(res)     # Ignore the 'rasised GremlinServerError' message and go ahead
 
 
-# In[6]:
+# In[ ]:
 
 
 # --- launch an operation of loading graphml data file on remote server: ---
-res = client.submit("graph.io(graphml()).readGraph('c:/datatools/~test/air-routes.graphml')")
-CheckResult(res)
+# res = client.submit("graph.io(graphml()).readGraph('c:/datatools/~test/air-routes.graphml')")
+# CheckResult(res)
 
 
 # In[ ]:
@@ -124,28 +124,28 @@ CheckResult(res)
 # ****************************************************
 
 
-# In[7]:
+# In[5]:
 
 
-# <Method-1 of checking existings>
+#  Checking existings graph properties - ALL
+res = client.submit('JanusGraphFactory.getGraphNames()')
+CheckResult(res)
+
+
+# In[6]:
+
+
+#  Checking existings graph properties
 res = client.submit('ConfiguredGraphFactory.getGraphNames()')
 CheckResult(res)
 
 
-# In[8]:
-
-
-# <Method-2 of checking existings>
-res = client.submit('ConfiguredGraphFactory.graphNames')
-CheckResult(res)
-
-
-# In[9]:
+# In[7]:
 
 
 # --- Open the selected existing graph property on the remote Janusgraph server: ---
-res = client.submit('graph = ConfiguredGraphFactory.open("SomeGraph")')
-CheckResult(res)
+res = client.submit("graph = ConfiguredGraphFactory.open('airroutes')")  # 'airrouts' is a already created graph
+CheckResult(res)       # Ignore the 'rasised GremlinServerError' message and go ahead
 
 
 # In[ ]:
@@ -156,7 +156,7 @@ CheckResult(res)
 # **************************************************************
 
 
-# In[10]:
+# In[8]:
 
 
 # <Test-1> --- Check graph's features ---
@@ -166,7 +166,7 @@ if f:
     print (r[0])
 
 
-# In[11]:
+# In[9]:
 
 
 # <Test-2> --- Create graph traversal object g ---
@@ -174,7 +174,7 @@ res = client.submit("g = graph.traversal()")
 CheckResult(res)    # Ignore the 'rasised GremlinServerError' message and go ahead
 
 
-# In[12]:
+# In[10]:
 
 
 # <Test-3> --- Optional sample code using client method ---
@@ -182,6 +182,15 @@ CheckResult(res)    # Ignore the 'rasised GremlinServerError' message and go ahe
 # WARNING: 
 #    The following codes only work with the 'air-routes.graphml' data file!
 #
+
+r =  client.submit("g.V().count()").all().result()
+print (len(r))
+print (r)
+
+
+# In[11]:
+
+
 r1 = client.submit("g.V().has('city','Sydney')").all().result()
 print (type(r1))
 print (r1)
@@ -189,7 +198,7 @@ print (len(r1),'vertices')
 print (r1[0].id, r1[0].label)
 
 
-# In[13]:
+# In[12]:
 
 
 r2 = client.submit("g.V().has('city','Sydney').has('country','AU')").all().result()
@@ -197,27 +206,20 @@ print (len(r2))
 print (r2)
 
 
-# In[14]:
+# In[13]:
 
 
-r3 = client.submit("g.V().range(1,10)").all().result()
+r3 = client.submit("g.V().range(0,10)").all().result()
 print (len(r3))
 print (r3)
 
 
-# In[15]:
+# In[14]:
 
 
 r4 = client.submit("g.V().range(100,120)").all().result()
 print (len(r4))
 print (r4)
-
-
-# In[16]:
-
-
-# Close the client when having everything done.
-client.close()
 
 
 # In[ ]:
@@ -228,7 +230,7 @@ client.close()
 # **************************************************************
 
 
-# In[17]:
+# In[15]:
 
 
 # Create graph and remote graph traversal objects (g) by RemoteConnection method:
@@ -249,7 +251,7 @@ g = graph.traversal().withRemote(
 print ('type of g: ',type(g))
 
 
-# In[18]:
+# In[16]:
 
 
 x1 = g.V().has("city",'Sydney').toList()
@@ -257,7 +259,7 @@ print (len(x1))
 print (x1)
 
 
-# In[19]:
+# In[17]:
 
 
 x2 = g.V().both()[1:3].toList()
@@ -265,7 +267,7 @@ print (len(x2))
 print (x2)
 
 
-# In[20]:
+# In[18]:
 
 
 x3 = g.V().range(1,10).toList()
@@ -273,7 +275,7 @@ print (len(x3))
 print (x3)
 
 
-# In[21]:
+# In[19]:
 
 
 x4 = g.V(x3).toList()
@@ -281,10 +283,23 @@ print (len(x4))
 print (x4)
 
 
-# In[22]:
+# In[20]:
 
 
 x5 = g.V(x3).id().toList()
 print (len(x5))
 print (x5)
+
+
+# In[21]:
+
+
+g.V().range(0,10).toList()
+
+
+# In[22]:
+
+
+# Done and close the client
+client.close()
 
