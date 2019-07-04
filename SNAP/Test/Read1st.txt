@@ -1,0 +1,16 @@
+Step-1:
+  Extract the zip file with subfolder retained
+
+Step-2:
+  Launch PowerShell and jump into subfolder "snap-test" extraced from the zip file.
+
+Step-3:
+  Type following commands in PowerShell console to see if everything is OK:
+  - "./kronem.exe"
+  - "./kronfit.exe"
+  - "./krongen.exe"
+
+  Note: Commad strings to launch the program MUST have "./" prefix and ".exe" suffix.
+
+
+  
