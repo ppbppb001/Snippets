@@ -180,17 +180,22 @@ makeDataFrameFromHTML <- function(input=NULL, names=NULL){
   in.name <- data$name
   in.value <- data$value
   # V0.22 ---
+  # Check length
   d1 <- length(in.name)
   d2 <- length(in.value)
   if (d1<1 || d2<1 || d1!=d2 ){
     return(NULL)
   }
+  # make names unique
+  in.name <- make.names(in.name, unique = TRUE)
   # V0.22 ---
   
   # Make an empty data frame from 'colNames'
   cells <- rep("", length=length(names))
   df <- data.frame(as.list(cells), stringsAsFactors = FALSE)
-  colnames(df) <- make.names(names)
+  # colnames(df) <- make.names(names)
+  names <- make.names(names, unique = TRUE)  # make names unique # V0.22 
+  colnames(df) <- names
   
   ixb <- in.name %in% names
   matchedName <- in.name[ixb]
