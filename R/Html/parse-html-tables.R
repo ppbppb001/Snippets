@@ -1,3 +1,9 @@
+#---------------------------------------------
+# v0.2 ~ 2019-07-29
+#---------------------------------------------
+
+
+
 # ***********************************************
 #
 #  Functions
@@ -170,7 +176,12 @@ makeDataFrameFromHTML <- function(input=NULL, names=NULL){
   
   for (i in 1:length(names)){
     ix <- which(matchedName %in% names[[i]])
-    df[1,i] <- as.character(matchedValue[[ix]])
+    # V0.2: check integrity of index 'ix
+    if (length(ix)>0){
+      if (ix>0){
+        df[1,i] <- as.character(matchedValue[[ix]])
+      }
+    }
   }
   
   return(df)
@@ -195,7 +206,7 @@ result.fn <- "result.csv"                   # save result data frame to this fil
 
 colNames.fn <- "colnames.txt"               # definitions of column name
 
-htmlFiles.folder <- ".\\htmlfiles_Test\\"   # the folder where html data files are stored
+htmlFiles.folder <- ".\\htmlfiles_test\\"   # the folder where html data files are stored
 
 htmlFiles.fn <- "htmlfiles.txt"             # name list of the html data files
 #
