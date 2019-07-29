@@ -1,5 +1,5 @@
 #---------------------------------------------
-# V0.22  ~ 2019-07-29 14:50
+# V0.22  ~ 2019-07-29 15:00
 # V0.21  ~ 2019-07-29 12:07
 # v0.2   ~ 2019-07-29
 #---------------------------------------------
@@ -120,16 +120,17 @@ htmlExtractRows <- function(input = NULL) {
 htmlExtractCols <- function(input = NULL) {
   tag1 <- "<td"
   tag2 <- "</td>"
+  
   output <- htmlExtractTaggedText(input, tag1, tag2)
   if (length(output) < 1){
     tag1 <- "<th"
     tag2 <- "</th>"
     output <- htmlExtractTaggedText(input, tag1, tag2)
-    print ('using TH')    # DEBUG_PRINT
-    print (output)        # DEBUG_PRINT # V0.21
-  } else {
-    print (output)        # DEBUG_PRINT
-  }
+    
+    if (DEBUG) { print ('Using TH') }  # DEBUG_PRINT # V0.22
+  } 
+  if (DEBUG) {  print (output) }       # DEBUG_PRINT # V0.22
+  
   return(output)
 }
 
@@ -222,6 +223,8 @@ makeDataFrameFromHTML <- function(input=NULL, names=NULL){
 #  Retrieve data from the html tables
 #
 # ***********************************************
+
+DEBUG <- FALSE
 
 # Configurations:
 result.fn <- "result.csv"                   # save result data frame to this file
