@@ -1,5 +1,7 @@
 #---------------------------------------------
-# v0.2 ~ 2019-07-29
+# V0.22  ~ 2019-07-29 13:53
+# V0.21  ~ 2019-07-29 12:07
+# v0.2   ~ 2019-07-29
 #---------------------------------------------
 
 
@@ -22,6 +24,7 @@ loadColNames <- function(filename = NULL){
     len <- length(ln)
     if (len > 0){
       if (nchar(ln)>0){
+        ln <- trimws(ln)  # V0.22
         p <- regexpr("#", ln, ignore.case = TRUE)
         if (p[[1]][1] != 1) {
           output <- c(output, ln)
@@ -54,6 +57,7 @@ loadHtmlFileNames <- function (filename=NULL){
       s <- strsplit(lns[i], " ")
       l = length(s[[1]])
       ss <- s[[1]][l]
+      ss <- trimws(ss)  # V0.22
       output <- c(output, ss)
     }
   }
@@ -81,9 +85,11 @@ htmlExtractTaggedText <- function(input = NULL,
     ix1 <- p1[[1]][i]
     ix2 <- p2[[1]][i]
     s <- substr(input, ix1, ix2-1)
+    s <- trimws(s)  # V0.22
     x1 <- gregexpr(pattern = ">", s)
     if (x1[[1]][1] > 0){
       s <- substr(s, x1[[1]][1]+1, nchar(s))
+      s <- trimws(s)  # V0.22
       output <- c(output, list(s))
     }
   }
@@ -115,12 +121,14 @@ htmlExtractCols <- function(input = NULL) {
   tag1 <- "<td"
   tag2 <- "</td>"
   output <- htmlExtractTaggedText(input, tag1, tag2)
-  print (output)
   if (length(output) < 1){
     tag1 <- "<th"
     tag2 <- "</th>"
     output <- htmlExtractTaggedText(input, tag1, tag2)
-    print ('using TH')
+    print ('using TH')    # DEBUG_PRINT
+    print (output)        # DEBUG_PRINT # V0.21
+  } else {
+    print (output)        # DEBUG_PRINT
   }
   return(output)
 }
@@ -137,17 +145,22 @@ htmlExtractData <- function(input = NULL){
   }
 
   for (i in 1:length(tbs)){
-  # for (i in 1:1){
     tb <- tbs[[i]]
     rows <- htmlExtractRows(tb)
+    
     # Process the table which have more than 2 rows
     if (length(rows) > 1){  
       cols1 <- htmlExtractCols(rows[[1]])
       cols2 <- htmlExtractCols(rows[[2]])
-      if (length(cols1)>0 && length(cols2)>0 && length(cols1)==length(cols2)){
-        output$name <- c(output$name, cols1)
-        output$value <- c(output$value, cols2)
+      # V0.22: align the list of names and list of values
+      lc1 <- length(cols1)
+      lc2 <- length(cols2)
+      if (lc1>0 && lc2>0) {
+        lc3 <- min(lc1,lc2)
+        output$name <- c(output$name, cols1[1:lc3])
+        output$value <- c(output$value, cols2[1:lc3])
       }
+      # V0.22 ---
     }
   }
   return(output)
@@ -157,12 +170,21 @@ htmlExtractData <- function(input = NULL){
 #--- Function: create a one row data from the html parsing output
 makeDataFrameFromHTML <- function(input=NULL, names=NULL){
   data <- htmlExtractData(input)
+  # V0.22 ---
+  if (length(data) < 1){
+    return(NULL)
+  }
+  # V0.22 --
   
   in.name <- data$name
   in.value <- data$value
-  if (length(in.name) < 1){
+  # V0.22 ---
+  d1 <- length(in.name)
+  d2 <- length(in.value)
+  if (d1==0 || d2==0 || d1!=d2 ){
     return(NULL)
   }
+  # V0.22 ---
   
   # Make an empty data frame from 'colNames'
   cells <- rep("", length=length(names))
@@ -172,7 +194,6 @@ makeDataFrameFromHTML <- function(input=NULL, names=NULL){
   ixb <- in.name %in% names
   matchedName <- in.name[ixb]
   matchedValue <- in.value[ixb]
-  
   
   for (i in 1:length(names)){
     ix <- which(matchedName %in% names[[i]])
@@ -249,19 +270,29 @@ if (htmlFiles.count < 1) {
 
 
 # Make data frame from the html files
+failed.fn <- list()   # V0.22
 result.df <- NULL
+filecount <- 0        # V0.22
 
 for (i in 1:length(htmlFiles.fileNames)){
   fn <- paste(htmlFiles.folder, htmlFiles.fileNames[[i]], sep = "")
   fr<-file(fn,"rb")
   htmltext <- rawToChar(readBin(fr,what="raw",n=1000000,1))
   close(fr)
+  cat("\n\n>>> Scan html file (",i,") <" , fn, "> ... ... \n")   # DEBUG_PRINT  # V0.22
+  filecount <- filecount + 1    # V0.22
   
   df <- makeDataFrameFromHTML(htmltext, colNames.list)
-  if (is.null(result.df)){
-    result.df <- df
-  } else {
-    result.df <- rbind(result.df, df)
+  if (!is.null(df)){  # V0.22
+    if (is.null(result.df)){
+      result.df <- df
+    } else {
+      result.df <- rbind(result.df, df)
+    }
+    print (">>> Result = OK!")      # DEBUG_PRINT  # V0.22
+  } else {  # V0.22
+    print (">>> Result = Failed!")  # DEBUG_PRINT  # V0.22
+    failed.fn <- c(failed.fn, fn)
   }
 }
 
@@ -271,13 +302,23 @@ if (is.null(result.df) || nrow(result.df) < 1){
 }
 
 
-# Benchmark
-tmFinish <- proc.time()[3]
-cat(">>> Time consumed =", (tmFinish - tmStart), "(s)")
-
-
 # Save data frame to file:
 write.csv(result.df, file = result.fn, row.names = FALSE)
+
+
+# Benchmark
+tmFinish <- proc.time()[3]
+cat(">>> Time consumed =", (tmFinish - tmStart), "(s)\n")
+cat(">>> Total", filecount, "(files) processed.\n")    # V0.22
+
+# Display failed files:  # V0.22
+d <- length(failed.fn)
+cat(">>> Total", d, "(files) failed.\n")
+if (d >0){
+  print(">>> Failed files: ")
+  print(failed.fn)
+}
+capture.output(failed.fn, file = "FailedFiles.txt")  # save list of failed files to a file
 
 
 # CHECK by reading back
