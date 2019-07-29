@@ -182,6 +182,7 @@ makeDataFrameFromHTML <- function(input=NULL, names=NULL){
         df[1,i] <- as.character(matchedValue[[ix]])
       }
     }
+    # V0.2: ---
   }
   
   return(df)
