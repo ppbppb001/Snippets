@@ -1,7 +1,19 @@
 #---------------------------------------------
-# V0.22  ~ 2019-07-29 16:30
-# V0.21  ~ 2019-07-29 12:07
+#
+# v0.25  ~ 2019-07-30 20:12
+#          - Use the 2nd data row if there are more than 2 rows of data in a table
+#
+# v0.23  ~ 2019-07-29 21:00
+#          - make the source file name as a column appened to the end of data frame
+#
+# v0.22  ~ 2019-07-29 16:30
+#          - make names unique by applying 'make.names()'
+#
+# v0.21  ~ 2019-07-29 12:07
+#          - apply 'trimws()' to all extracted strings
+#
 # v0.2   ~ 2019-07-29
+#
 #---------------------------------------------
 
 
@@ -150,9 +162,16 @@ htmlExtractData <- function(input = NULL){
     rows <- htmlExtractRows(tb)
     
     # Process the table which have more than 2 rows
-    if (length(rows) > 1){  
+    # v0.25 ---
+    lr <- length(rows)
+    if (lr > 1){  
       cols1 <- htmlExtractCols(rows[[1]])
-      cols2 <- htmlExtractCols(rows[[2]])
+      if (lr < 3){
+        cols2 <- htmlExtractCols(rows[[2]])
+      } else {
+        cols2 <- htmlExtractCols(rows[[3]])
+      }
+      # v0.25 ---
       # V0.22: align the list of names and list of values
       lc1 <- length(cols1)
       lc2 <- length(cols2)
@@ -169,7 +188,7 @@ htmlExtractData <- function(input = NULL){
 
 
 #--- Function: create a one row data from the html parsing output
-makeDataFrameFromHTML <- function(input=NULL, names=NULL){
+makeDataFrameFromHTML <- function(input=NULL, names=NULL, source=NULL){
   data <- htmlExtractData(input)
   # V0.22 ---
   if (length(data) < 1){
@@ -193,6 +212,7 @@ makeDataFrameFromHTML <- function(input=NULL, names=NULL){
   # Make an empty data frame from 'colNames'
   cells <- rep("", length=length(names))
   df <- data.frame(as.list(cells), stringsAsFactors = FALSE)
+  df[1,ncol(df)] <- source
   # colnames(df) <- make.names(names)
   names <- make.names(names, unique = TRUE)  # make names unique # V0.22 
   colnames(df) <- names
@@ -231,7 +251,7 @@ makeDataFrameFromHTML <- function(input=NULL, names=NULL){
 
 DEBUG <- FALSE
 
-# Configurations:
+# Configurations ---------------------------------
 result.fn <- "result.csv"                   # save result data frame to this file
 
 colNames.fn <- "colnames.txt"               # definitions of column name
@@ -261,15 +281,16 @@ htmlFiles.fn <- "htmlfiles.txt"             # name list of the html data files
 tmStart <- proc.time()[3]
 
 
-# Load predefined column names 
+# Load predefined column names -----------------------------
 colNames.list <- loadColNames(colNames.fn)
 if (length(colNames.list) < 1){
   stop("Failed to load definitions of column name")
 }
+colNames.list <- append(colNames.list, "Remark.DataSource") # v0.23
 colNames.count <- length(colNames.list)
 
 
-# Load name list of the html data files
+# Load name list of the html data files ----------------------
 htmlFiles.fileNames <- loadHtmlFileNames(paste(htmlFiles.folder, htmlFiles.fn, sep=""))
 htmlFiles.count <- length(htmlFiles.fileNames)
 if (htmlFiles.count < 1) {
@@ -277,7 +298,7 @@ if (htmlFiles.count < 1) {
 }
 
 
-# Make data frame from the html files
+# Make data frame from the html files -------------------------
 failed.fn <- list()   # V0.22
 result.df <- NULL
 filecount <- 0        # V0.22
@@ -290,7 +311,7 @@ for (i in 1:length(htmlFiles.fileNames)){
   cat("\n\n>>> Scan html file (",i,") <" , fn, "> ... ... \n")   # DEBUG_PRINT  # V0.22
   filecount <- filecount + 1    # V0.22
   
-  df <- makeDataFrameFromHTML(htmltext, colNames.list)
+  df <- makeDataFrameFromHTML(htmltext, colNames.list, htmlFiles.fileNames[[i]])  # v0.23
   if (!is.null(df)){  # V0.22
     if (is.null(result.df)){
       result.df <- df
@@ -318,6 +339,7 @@ write.csv(result.df, file = result.fn, row.names = FALSE)
 tmFinish <- proc.time()[3]
 cat(">>> Time consumed =", (tmFinish - tmStart), "(s)\n")
 cat(">>> Total", filecount, "(files) processed.\n")    # V0.22
+
 
 # Display failed files:  # V0.22
 d <- length(failed.fn)
