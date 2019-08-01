@@ -1,5 +1,8 @@
 #---------------------------------------------
 #
+# v0.26  ~ 2019-08-01 20:10
+#          - Merge multiple rows of a table
+#
 # v0.25  ~ 2019-07-30 20:12
 #          - Use the 2nd data row if there are more than 2 rows of data in a table
 #
@@ -147,90 +150,135 @@ htmlExtractCols <- function(input = NULL) {
 }
 
 
-#--- Function: extract data from the html table
+#--- Function: extract data from the html table  # v0.26
 htmlExtractData <- function(input = NULL){
   output <- list()
   
+  # extract data tables ...
   tbs <- htmlExtractTables(input)
   if (length(tbs) < 1){
     # stop("Failed to parse html file to extract tabel(s).")
     return (output)
   }
 
+  # extract name/value rows ...
+  tbdata <- list()
   for (i in 1:length(tbs)){
     tb <- tbs[[i]]
     rows <- htmlExtractRows(tb)
-    
-    # Process the table which have more than 2 rows
-    # v0.25 ---
-    lr <- length(rows)
-    if (lr > 1){  
-      cols1 <- htmlExtractCols(rows[[1]])
-      if (lr < 3){
-        cols2 <- htmlExtractCols(rows[[2]])
-      } else {
-        cols2 <- htmlExtractCols(rows[[3]])
+    rcnt <- length(rows)
+    if (rcnt > 1) {  # Only collect table with more than 2 rows
+      sect <- list()
+      for (ii in 1:rcnt){
+        cols <- htmlExtractCols(rows[[ii]])
+        sect <- c(sect, list(cols))
       }
-      # v0.25 ---
-      # V0.22: align the list of names and list of values
-      lc1 <- length(cols1)
-      lc2 <- length(cols2)
-      if (lc1>0 && lc2>0) {
-        lc3 <- min(lc1,lc2)
-        output$name <- c(output$name, cols1[1:lc3])
-        output$value <- c(output$value, cols2[1:lc3])
-      }
-      # V0.22 ---
+      tbdata <- c(tbdata, list(sect))
     }
   }
+  if (length(tbdata) < 1) {
+    # stop("Failed to extract valid rows from tables.")
+    return (output)
+  }
+
+  # padding data rows ...
+  maxrcnt <- 0
+  for (i in 1:length(tbdata)){
+    maxrcnt <- max(maxrcnt, length(tbdata[[i]]))
+  }
+  for (i in 1:length(tbdata)){
+    rcnt <- length(tbdata[[i]])
+    rlast <- tbdata[[i]][rcnt]
+    pads <- maxrcnt - rcnt
+    if (pads > 0){
+      for (ii in 1:pads){
+        tbdata[[i]] <- append(tbdata[[i]], rlast)
+      }
+    }
+  }
+
+  tbcnt <- length(tbdata)
+  rowcnt <- length(tbdata[[1]])
+
+  # align columns for each table ...
+  for (i in 1:tbcnt){
+    ccmin <- 100000
+    for (ii in 1:rowcnt){
+      ccmin <- min(ccmin, length(tbdata[[i]][[ii]]))
+    }
+    # cat("tb=",i,"ccmin=",ccmin,"\n")
+    for (ii in 1:rowcnt){
+      tbdata[[i]][[ii]] <- tbdata[[i]][[ii]][1:ccmin]     
+    }
+  }
+
+  # Generate the output data ...
+  for (i in 1:rowcnt){
+    x <- list()
+    for (ii in 1:tbcnt){
+      x <- c(x, tbdata[[ii]][[i]])
+    }
+    output <- c(output, list(x))
+  }
+
   return(output)
 }
 
 
-#--- Function: create a one row data from the html parsing output
+#--- Function: create a one row data from the html parsing output  #v0.26
 makeDataFrameFromHTML <- function(input=NULL, names=NULL, source=NULL){
   data <- htmlExtractData(input)
-  # V0.22 ---
-  if (length(data) < 1){
+  in.rowcnt <- length(data)
+  if (in.rowcnt < 1){
     return(NULL)
   }
-  # V0.22 --
+
+  in.name <- data[[1]]           # row#1 = names
+  in.value <- data[2:in.rowcnt]  # row#2..n = values
+  in.colcnt <- length(in.name)
   
-  in.name <- data$name
-  in.value <- data$value
-  # V0.22 ---
-  # Check length
-  d1 <- length(in.name)
-  d2 <- length(in.value)
-  if (d1<1 || d2<1 || d1!=d2 ){
-    return(NULL)
+  # Check length ...
+  for (i in 2:in.rowcnt) {
+    if (length(in.value[[i-1]]) != in.colcnt){
+      return(NULL)
+    }
   }
-  # make names unique
+  
+  # make names unique ...
   in.name <- make.names(in.name, unique = TRUE)
-  # V0.22 ---
+  defnames <- make.names(names, unique = TRUE)
   
-  # Make an empty data frame from 'colNames'
-  cells <- rep("", length=length(names))
-  df <- data.frame(as.list(cells), stringsAsFactors = FALSE)
+  # Make an empty data frame to match structures of input data ...
+  cells <- as.list(rep("", length=length(defnames)))
+  df <- data.frame(cells, stringsAsFactors = FALSE)
+  colnames(df) <- defnames
   df[1,ncol(df)] <- source
-  # colnames(df) <- make.names(names)
-  names <- make.names(names, unique = TRUE)  # make names unique # V0.22 
-  colnames(df) <- names
+  if (in.rowcnt > 2){  # if there are more than 1 row of value
+    dfx <- df
+    for (i in 1:(in.rowcnt-2)){
+      df <- rbind(df,dfx)
+    }
+  }
   
-  ixb <- in.name %in% names
+
+  # Compose the output data frame ...
+  ixb <- in.name %in% defnames
   matchedName <- in.name[ixb]
-  matchedValue <- in.value[ixb]
-  
-  for (i in 1:length(names)){
-    ix <- which(matchedName %in% names[[i]])
-    # V0.2: check integrity of index 'ix
+  for (i in 1:length(defnames)){
+    ix <- which(matchedName %in% defnames[[i]])
+    # check integrity of index 'ix
     if (length(ix)>0){
       if (ix>0){
-        df[1,i] <- as.character(matchedValue[[ix]])
+        for (ii in 1:(in.rowcnt-1)){
+          matchedValue <- in.value[[ii]][ixb]
+          df[ii,i] <- as.character(matchedValue[[ix]])
+        }
       }
     }
-    # V0.2: ---
   }
+  
+  # print (df)
+  # stop("Terminated by user!")
   
   return(df)
 }
