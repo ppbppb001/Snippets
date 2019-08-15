@@ -6,7 +6,7 @@ from bear.timeseries as bts;
 -- Get last 10 records ---
 select *
 from bear.timeseries
-qualify rank() over(order by datex DESC, timex DESC) <= 10;  /* descend sorting by datex/timex */
+qualify rank() over(order by datex DESC, timex DESC) <= 10;  /* get ranks top 10 after descending sort by datex/timex */
 
 
 -- get last 10% of records --
