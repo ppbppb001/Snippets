@@ -29,4 +29,7 @@ select *
 from bear.timeseries
 qualify rank() over(order by datex DESC, timex DESC) <= ((select count(1) from bear.timeseries) * 0.1);
 
-
+/* get last 10% of records - descending result - simpler version*/
+select *
+from bear.timeseries
+qualify rank(datex, timex) <= ((select count(1) from bear.timeseries) * 0.1);
