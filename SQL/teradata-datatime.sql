@@ -72,27 +72,53 @@ cast('2019-08-15 08:00:00' as timestamp(0) format 'YYYY-MM-DDBHH:MI:SS'));
 /* --- [Part 4] compare date/time by TYPE_DATE/TYPE_TIME -> STRING -> TIMESTAMP ---*/
 
 /* conver date/time -> string */
-select concat(to_char(bts.datex,'YYYY-MM-DD'), ' ', to_char(bts.timex))
+/* method-1: using 'concat' */
+select concat(concat(to_char(bts.datex,'YYYY-MM-DD'), ' '), to_char(bts.timex))
+from bear.timeseries as bts;
+/* method-2: using operator '||' */
+select to_char(bts.datex,'YYYY-MM-DD') || ' ' || to_char(bts.timex)
 from bear.timeseries as bts;
 
+
 /* conver date/time -> string -> timestamp */
-select to_timestamp(concat(to_char(bts.datex,'YYYY-MM-DD'), ' ', to_char(bts.timex)), 'YYYY-MM-DD HH24:MI:SS')
+/* method-1: using 'concat' */
+select to_timestamp(concat(concat(to_char(bts.datex,'YYYY-MM-DD'), ' '), to_char(bts.timex)), 'YYYY-MM-DD HH24:MI:SS')
+from bear.timeseries as bts;
+/* method-2: using operator '||' */
+select to_timestamp((to_char(bts.datex,'YYYY-MM-DD') || ' ' || to_char(bts.timex)), 'YYYY-MM-DD HH24:MI:SS')
 from bear.timeseries as bts;
 
 /* compare date/time with hard-coded datetime */
+/* method-1: using 'concat' */
 select *
 from bear.timeseries as bts
 where 
-to_timestamp(concat(to_char(bts.datex,'YYYY-MM-DD'), ' ', to_char(bts.timex)), 'YYYY-MM-DD HH24:MI:SS') >= 
+to_timestamp(concat(concat(to_char(bts.datex,'YYYY-MM-DD'), ' '), to_char(bts.timex)), 'YYYY-MM-DD HH24:MI:SS') >= 
 to_timestamp('2019-08-14 08:00:00', 'YYYY-MM-DD HH24:MI:SS')
 and
-to_timestamp(concat(to_char(bts.datex,'YYYY-MM-DD'), ' ', to_char(bts.timex)), 'YYYY-MM-DD HH24:MI:SS') < 
+to_timestamp(concat(concat(to_char(bts.datex,'YYYY-MM-DD'), ' '), to_char(bts.timex)), 'YYYY-MM-DD HH24:MI:SS') < 
+to_timestamp('2019-08-15 08:00:00', 'YYYY-MM-DD HH24:MI:SS');
+/* method-2: using operator '||' */
+select *
+from bear.timeseries as bts
+where 
+to_timestamp((to_char(bts.datex,'YYYY-MM-DD') || ' ' || to_char(bts.timex)), 'YYYY-MM-DD HH24:MI:SS') >= 
+to_timestamp('2019-08-14 08:00:00', 'YYYY-MM-DD HH24:MI:SS')
+and
+to_timestamp((to_char(bts.datex,'YYYY-MM-DD') || ' ' || to_char(bts.timex)), 'YYYY-MM-DD HH24:MI:SS') < 
 to_timestamp('2019-08-15 08:00:00', 'YYYY-MM-DD HH24:MI:SS');
 
 /* compare date/time with current_timestamp */
+/* method-1: using 'concat' */
 select *
 from bear.timeseries as bts
 where 
-to_timestamp(concat(to_char(bts.datex,'YYYY-MM-DD'), ' ', to_char(bts.timex)), 'YYYY-MM-DD HH24:MI:SS') > 
-to_timestamp(to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') - interval '10' minute;
+to_timestamp(concat(concat(to_char(bts.datex,'YYYY-MM-DD'), ' '), to_char(bts.timex)), 'YYYY-MM-DD HH24:MI:SS') > 
+to_timestamp(to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') - interval '120' hour;
+/* method-2: using operator '||' */
+select *
+from bear.timeseries as bts
+where 
+to_timestamp((to_char(bts.datex,'YYYY-MM-DD') || ' ' || to_char(bts.timex)), 'YYYY-MM-DD HH24:MI:SS') > 
+to_timestamp(to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') - interval '120' hour;
 
