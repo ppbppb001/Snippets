@@ -1,3 +1,9 @@
+#   v0.2 - 2019-08-22 19:59
+#
+#
+#
+#
+
 library("RJDBC")
 library("rJava")
 library("DBI")
@@ -49,8 +55,9 @@ dt2 <- dt1 - 8*3600      # minus 8 hours
 
 for (i in 1:10) {
   
-  # Query: dt2 <= DateTime < dt1
-  # Method-1: TYPE_DATE/TYPE_TIME -> TIMESTAMP
+  # Query: dt2 <= DateTime < dt1 -------------------------
+  
+  # [Method-1]: TYPE_DATE/TYPE_TIME -> TIMESTAMP
   # qs <- sprintf("select *
   #                from bear.timeseries as bts
   #                where 
@@ -61,24 +68,38 @@ for (i in 1:10) {
   #                cast('%s' as timestamp(0) format 'YYYY-MM-DDBHH:MI:SS'));",
   #               as.character(dt2), as.character(dt1))
   
-  # Method-2: TYPE_DATE/TYPE_TIME -> STRING -> TIMESTAMP
+  # [Method-2]: TYPE_DATE/TYPE_TIME -> STRING -> TIMESTAMP (using 'concat')
+#   qs <- sprintf(
+# "select * from bear.timeseries as bts
+# where 
+# to_timestamp(concat(concat(to_char(bts.datex,'YYYY-MM-DD'), ' '), to_char(bts.timex)), 'YYYY-MM-DD HH24:MI:SS') >= 
+# to_timestamp('%s', 'YYYY-MM-DD HH24:MI:SS')
+# and
+# to_timestamp(concat(concat(to_char(bts.datex,'YYYY-MM-DD'), ' '), to_char(bts.timex)), 'YYYY-MM-DD HH24:MI:SS') < 
+# to_timestamp('%s', 'YYYY-MM-DD HH24:MI:SS');",
+#                 as.character(dt2), as.character(dt1))
+  
+  # [Method-3]: TYPE_DATE/TYPE_TIME -> STRING -> TIMESTAMP (using operator '||')
   qs <- sprintf(
-"select * from bear.timeseries as bts
+    "select * from bear.timeseries as bts
 where 
-to_timestamp(concat(to_char(bts.datex,'YYYY-MM-DD'), ' ', to_char(bts.timex)), 'YYYY-MM-DD HH24:MI:SS') >= 
+to_timestamp((to_char(bts.datex,'YYYY-MM-DD') || ' ' || to_char(bts.timex)), 'YYYY-MM-DD HH24:MI:SS') >= 
 to_timestamp('%s', 'YYYY-MM-DD HH24:MI:SS')
 and
-to_timestamp(concat(to_char(bts.datex,'YYYY-MM-DD'), ' ', to_char(bts.timex)), 'YYYY-MM-DD HH24:MI:SS') < 
+to_timestamp((to_char(bts.datex,'YYYY-MM-DD') || ' ' || to_char(bts.timex)), 'YYYY-MM-DD HH24:MI:SS') < 
 to_timestamp('%s', 'YYYY-MM-DD HH24:MI:SS');",
-                as.character(dt2), as.character(dt1))
+    as.character(dt2), as.character(dt1))
   
   if (DEBUG_SQL){
     cat(">>> SQL Query =[\n ",qs,"\n]\n")
   }
+  
   # Send the query and wait for the result
   rs <- dbSendQuery(conn, qs)
+  
   # Get the result data frame
   dfx<-dbFetch(rs)
+  
   # Clear the resource committed for this query
   dbClearResult(rs)
   if (DEBUG_SQL){
