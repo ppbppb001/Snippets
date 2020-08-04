@@ -8,12 +8,7 @@ gremlin <- '--gremlin g.V().range(0,10).count()'
 # outfile <- '--outfile d:\\user\\studyandtest\\r\\github.com\\graph\\res.txt'
 outfile <- ''
 
-cmd <- paste0(py,' ',
-              script, ' ',
-              url, ' ',
-              auth, ' ',
-              gremlin, ' ',
-              outfile)
+cmd <- paste(py, script, url, auth, gremlin, outfile)
 cmd
 
 res <- system(cmd, intern = TRUE)
@@ -24,11 +19,5 @@ res[2]
 x <- jsonlite::fromJSON(res[2])
 d <- x$result$data$'@value'$'@value'
 d
-
-# dlen <- length(d[[1]])
-# for (i in seq(dlen/2)) {
-#   s <- paste0 (i, '=> ', d[[1]][[i*2-1]], ' | ',d[[1]][[i*2]])
-#   print (s)
-# }
 
 
