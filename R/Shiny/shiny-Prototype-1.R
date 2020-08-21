@@ -36,30 +36,11 @@ sidebar <- dashboardSidebar(
           
 ## Body content:
 body <- dashboardBody(
+  
           tags$head(
             tags$style(
-              HTML('
-                # .col-sm-4 {
-                #   margin: 0px;
-                #   padding: 0px;
-                # }
-                # .col-sm-8 {
-                #   margin: 2px;
-                #   padding: 2px;
-                # }
-                # .col-sm-12 {
-                #   margin: 2px;
-                #   padding: 2px;
-                # }
-                # .box {
-                #   margin: 1px;
-                #   padding: 1px;
-                # }
-                # .box-body {
-                #   margin: 1px;
-                #   padding: 1px;
-                # }
-              ')
+              type="text/css",
+              ".datatables {font-size: 90%}"
             )
           ),
   
@@ -76,14 +57,14 @@ body <- dashboardBody(
                       
                       box(
                           width = 12,
-                          style = "padding: 8px; margin: 0px; height: 90vh; background-color: #fafafa",
                           id = "panel_c1r1",
-                          title = "Search Potential DUplicate by Similarity Metric", status = "primary", solidHeader = TRUE,
+                          title = "Selection", status = "primary", solidHeader = TRUE,
                           # collapsible = TRUE,
+                          style = "padding: 8px; margin: 0px; height: 90vh; background-color: #fafafa",
                           
                           actionButton("btnSelectReset","Reset Selection", 
                                        style = "width: 120px; margin: 12px; float: right; font-weight: bold"),
-                          actionButton("btnSelect","Select", 
+                          actionButton("btnPlot","Plot", 
                                        style = "width: 120px; margin: 12px; float: right; font-weight: bold"),
                           # textOutput("lb_selectedRows"),
                           # verbatimTextOutput("lb_selectedRows2"),
@@ -92,8 +73,8 @@ body <- dashboardBody(
                             title = "Similarity",
                             id = "tabbox_r1c1",
                             width = 12,
-                            tabPanel("Tabel-1", DT::dataTableOutput("table_c1t1")),
-                            tabPanel("Tabel-2", DT::dataTableOutput("table_c1t2"))
+                            tabPanel("Seletion-1", DT::dataTableOutput("table_sele_1")),
+                            tabPanel("Seletion-2", DT::dataTableOutput("table_Sele_2"))
                           )
                       )
 
@@ -105,42 +86,43 @@ body <- dashboardBody(
                       
                       box(
                         width = 12,
-                        style = "padding: 8px; margin: 0px; height: 60vh; background-color: #fafafa",
                         id = "panel_c2r1",
-                        title = "Outcome Plots", status = "success", solidHeader = TRUE,
+                        title = "Output", status = "success", solidHeader = TRUE,
                         # collapsible = TRUE,
+                        style = "padding: 8px; margin: 0px; height: 90vh; background-color: #fafafa",
                         
-                        actionButton("btnPlotTest","Test", 
+                        actionButton("btnDistinct","Mark Distinct", 
                                      style = "width: 120px; margin: 12px; float: right; font-weight: bold;"),
-                        actionButton("btnPlot","Plot", 
+                        actionButton("btnMerge","Merge", 
                                      style = "width: 120px; margin: 12px; float: right; font-weight: bold;"),
                         
                         tabBox(
                           title = "Data Plots",
                           id = "tabbox_plots",
                           width = 12,
-                          height = "52vh",
+                          height = "60vh",
                           tabPanel("Plot-1", plotOutput("plot_1")),
                           tabPanel("Plot-2", plotOutput("plot_2"))
                         ),
+                      # ),
+                      # 
+                      # box(
+                      #   width = 12,
+                      #   id = "panel_c2r2",
+                      #   title = "Outcome Details", status = "warning", solidHeader = TRUE,
+                      #   # collapsible = TRUE,
+                      #   style = "padding: 8px; margin: 4px; height: 25vh; background-color: #fafafa;
+                      #            font-szie: 10%;",
                         
-                      ),
-                      
-                      box(
-                        width = 12,
-                        style = "padding: 8px; margin: 4px; height: 25vh; background-color: #fafafa",
-                        id = "panel_c2r2",
-                        title = "Outcome Details", status = "warning", solidHeader = TRUE,
-                        # collapsible = TRUE,
                         tabBox(
                           title = "Details",
                           id = "tabbox_details",
                           width = 12,
-                          tabPanel("Tabel-1", DT::dataTableOutput("table_detail_1")),
-                          tabPanel("Tabel-2", DT::dataTableOutput("table_detail_2"))
+                          tabPanel("Details-1", DT::dataTableOutput("table_detail_1")),
+                          tabPanel("Details-2", DT::dataTableOutput("table_detail_2"))
                         )
                       )
-                      
+                       
                     )
                   )
                 )
@@ -167,21 +149,13 @@ server <- function(input, output, session) {
   
   # [Box_Selection] ###############
   
-  output$table_c1t1 <- DT::renderDataTable({
+  output$table_sele_1 <- DT::renderDataTable({
     DT::datatable(dfSel, options = list(pageLength = 15))
   })
   
-  output$table_c1t2 <- DT::renderDataTable({
+  output$table_sele_2 <- DT::renderDataTable({
     DT::datatable(diamonds, options = list(pageLength = 15))
   })
-  
-  # output$lb_selectedRows <- renderText("Selected Rows:")
-  # output$lb_selectedRows2 <- renderText(" ")
-
-  observeEvent(input$btnSelect, {
-    selectedSrcRows <- input$table_c1t1_rows_selected
-    cat(selectedSrcRows)
-  })  
   
   proxyC1T1 <- DT::dataTableProxy("table_c1t1")
   observeEvent(input$btnSelectReset, {
