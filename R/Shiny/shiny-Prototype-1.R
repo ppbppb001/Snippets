@@ -4,10 +4,18 @@ library(DT)
 # library(shinydashboardPlus)
 library(ggplot2)
 library(visNetwork)
+library(igraph)
+
+setwd('D:\\User\\StudyAndTest\\R\\Shiny')
 
 data("iris")
 
 selectedSrcRows <- NULL
+
+dfRaw = read.csv('IER_simu_data1.csv')
+dfSel = dfRaw[,c(1,2)]
+
+
 
 # UI ----------------------------------------------------
 ## Header
@@ -74,9 +82,9 @@ body <- dashboardBody(
                           # collapsible = TRUE,
                           
                           actionButton("btnSelectReset","Reset Selection", 
-                                       style = "width: 200px; margin: 12px; float: right; font-weight: bold"),
+                                       style = "width: 120px; margin: 12px; float: right; font-weight: bold"),
                           actionButton("btnSelect","Select", 
-                                       style = "width: 200px; margin: 12px; float: right; font-weight: bold"),
+                                       style = "width: 120px; margin: 12px; float: right; font-weight: bold"),
                           # textOutput("lb_selectedRows"),
                           # verbatimTextOutput("lb_selectedRows2"),
                           
@@ -84,11 +92,11 @@ body <- dashboardBody(
                             title = "Similarity",
                             id = "tabbox_r1c1",
                             width = 12,
-                            tabPanel("Tabel-iris", DT::dataTableOutput("table_c1t1")),
-                            tabPanel("Tabel-diamond", DT::dataTableOutput("table_c1t2"))
+                            tabPanel("Tabel-1", DT::dataTableOutput("table_c1t1")),
+                            tabPanel("Tabel-2", DT::dataTableOutput("table_c1t2"))
                           )
-                          
                       )
+
                     ),
 
                     column(
@@ -102,10 +110,10 @@ body <- dashboardBody(
                         title = "Outcome Plots", status = "success", solidHeader = TRUE,
                         # collapsible = TRUE,
                         
-                        actionButton("btnReset","Reset", 
-                                     style = "width: 200px; margin: 12px; float: right; font-weight: bold;"),
-                        actionButton("btnConfirm","Confirm", 
-                                     style = "width: 200px; margin: 12px; float: right; font-weight: bold;"),
+                        actionButton("btnPlotTest","Test", 
+                                     style = "width: 120px; margin: 12px; float: right; font-weight: bold;"),
+                        actionButton("btnPlot","Plot", 
+                                     style = "width: 120px; margin: 12px; float: right; font-weight: bold;"),
                         
                         tabBox(
                           title = "Data Plots",
@@ -122,9 +130,17 @@ body <- dashboardBody(
                         width = 12,
                         style = "padding: 8px; margin: 4px; height: 25vh; background-color: #fafafa",
                         id = "panel_c2r2",
-                        title = "Outcome Details", status = "warning", solidHeader = TRUE
+                        title = "Outcome Details", status = "warning", solidHeader = TRUE,
                         # collapsible = TRUE,
+                        tabBox(
+                          title = "Details",
+                          id = "tabbox_details",
+                          width = 12,
+                          tabPanel("Tabel-1", DT::dataTableOutput("table_detail_1")),
+                          tabPanel("Tabel-2", DT::dataTableOutput("table_detail_2"))
+                        )
                       )
+                      
                     )
                   )
                 )
@@ -148,11 +164,13 @@ ui <- dashboardPage(header=header,
 
 server <- function(input, output, session) {
 
-  # output$table_r1c1 <- renderDataTable(iris,
-  #                                   options = list(pageLength=5))
+  
+  # [Box_Selection] ###############
+  
   output$table_c1t1 <- DT::renderDataTable({
-    DT::datatable(iris, options = list(pageLength = 15))
+    DT::datatable(dfSel, options = list(pageLength = 15))
   })
+  
   output$table_c1t2 <- DT::renderDataTable({
     DT::datatable(diamonds, options = list(pageLength = 15))
   })
@@ -171,6 +189,25 @@ server <- function(input, output, session) {
   })
   
 
+  # [Box_Plot] ###############
+  
+  observeEvent(input$btnPlot,{
+    output$plot_1 <- renderPlot({
+      g <- make_ring(10)
+      plot.igraph(g, layout=layout_with_kk, vertex.color="green")
+    })
+  })
+  
+  
+  # [Box_Details] ###############
+  
+  output$table_detail_1 <- DT::renderDataTable({
+    DT::datatable(dfSel, options = list(pageLength = 3))
+  })
+  
+  
+  
+  
 
   # Stop server after brower closed
   session$onSessionEnded(function() {
