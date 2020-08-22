@@ -26,7 +26,7 @@ sidebar <- dashboardSidebar(
               collapsed = TRUE,
               sidebarMenu(
                   id = "sidebar",
-                  menuItem("Page-1", tabName = "page_1", icon = icon("share-alt"))
+                  menuItem(text = "Page-1", tabName = "page_1", icon = icon("share-alt"))
                   # menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
                   # menuItem("Tabs", tabName = "tabs", icon = icon("th")),
                   # menuItem("DataTable", tabName = "datatable", icon = icon("table")),
@@ -62,9 +62,9 @@ body <- dashboardBody(
                           # collapsible = TRUE,
                           style = "padding: 8px; margin: 0px; height: 90vh; background-color: #fafafa",
                           
-                          actionButton("btnSelectReset","Reset Selection", 
+                          actionButton("btnSelectReset",label = "Reset Selection", 
                                        style = "width: 120px; margin: 12px; float: right; font-weight: bold"),
-                          actionButton("btnPlot","Plot", 
+                          actionButton("btnPlot",label = "Plot", 
                                        style = "width: 120px; margin: 12px; float: right; font-weight: bold"),
                           # textOutput("lb_selectedRows"),
                           # verbatimTextOutput("lb_selectedRows2"),
@@ -74,7 +74,7 @@ body <- dashboardBody(
                             id = "tabbox_r1c1",
                             width = 12,
                             tabPanel("Seletion-1", DT::dataTableOutput("table_sele_1")),
-                            tabPanel("Seletion-2", DT::dataTableOutput("table_Sele_2"))
+                            tabPanel("Seletion-2", DT::dataTableOutput("table_sele_2"))
                           )
                       )
 
@@ -91,9 +91,9 @@ body <- dashboardBody(
                         # collapsible = TRUE,
                         style = "padding: 8px; margin: 0px; height: 90vh; background-color: #fafafa",
                         
-                        actionButton("btnDistinct","Mark Distinct", 
+                        actionButton("btnDistinct", label = "Mark Distinct", 
                                      style = "width: 120px; margin: 12px; float: right; font-weight: bold;"),
-                        actionButton("btnMerge","Merge", 
+                        actionButton("btnMerge", label = "Merge", 
                                      style = "width: 120px; margin: 12px; float: right; font-weight: bold;"),
                         
                         tabBox(
@@ -133,7 +133,7 @@ body <- dashboardBody(
           )
       )
 
-ui <- dashboardPage(header=header, 
+ui <- dashboardPage(header = header, 
                     sidebar = sidebar, 
                     body = body,
                     skin = "green",
@@ -154,12 +154,14 @@ server <- function(input, output, session) {
   })
   
   output$table_sele_2 <- DT::renderDataTable({
-    DT::datatable(diamonds, options = list(pageLength = 15))
+    DT::datatable(iris, options = list(pageLength = 15))
   })
   
-  proxyC1T1 <- DT::dataTableProxy("table_c1t1")
+  proxyC1T1 <- DT::dataTableProxy("table_sele_1")
+  proxyC1T2 <- DT::dataTableProxy("table_sele_2")
   observeEvent(input$btnSelectReset, {
     proxyC1T1 %>% selectRows(NULL)
+    proxyC1T2 %>% selectRows(NULL)
   })
   
 
