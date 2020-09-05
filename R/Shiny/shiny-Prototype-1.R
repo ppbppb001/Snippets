@@ -11,10 +11,12 @@ setwd('D:\\User\\StudyAndTest\\R\\Shiny')
 data("iris")
 
 selectedRowsTab1 <- NULL
-selectedRowsTab2 <- NULL
+selectedRowsTab2 <- as.integer(c(1,2))
 
-dfRaw = read.csv('IER_simu_data1.csv')
+dfRaw = read.csv('IER_simu_data1.csv', header=T, stringsAsFactors = F)
 dfSel = dfRaw[,c(1,2)]
+
+dfSimi <- read.csv('IER_simi_attrib.csv', header=T, stringsAsFactors = F)
 
 
 
@@ -78,7 +80,7 @@ body <- dashboardBody(
                             width = 12,
                             tabPanel("Seletion-1", DT::dataTableOutput("table_sele_1")),
                             tabPanel("Seletion-2", 
-                                     actionButton("btnX", label = "Button",
+                                     actionButton("btnSearch", label = "Search",
                                                   style = "width: 120px; margin-bottom: 12px; font-weight: bold"),
                                      DT::dataTableOutput("table_sele_2"))
                           )
@@ -160,11 +162,14 @@ server <- function(input, output, session) {
   })
   
   output$table_sele_2 <- DT::renderDataTable({
-    DT::datatable(iris, options = list(pageLength = 15))
+    DT::datatable(dfSimi, 
+                  options = list(pageLength = 15),
+                  selection = list(mode = 'multiple', selected = selectedRowsTab2))
   })
   
   proxyC1T1 <- DT::dataTableProxy("table_sele_1")
   proxyC1T2 <- DT::dataTableProxy("table_sele_2")
+  
   observeEvent(input$btnSelectReset, {
     proxyC1T1 %>% selectRows(NULL)
     proxyC1T2 %>% selectRows(NULL)
