@@ -19,10 +19,11 @@ dfSel = dfRaw[,c(1,2)]
 
 # UI ----------------------------------------------------
 ## Header
-header <- dashboardHeader(title = "Shiny Prototype 1")
+header <- dashboardHeader(title = "Shiny Prototype 1 -akldjlaskdjklasdjklasjdlka", titleWidth = 500)
                           
 ## Sidebar contents
 sidebar <- dashboardSidebar(
+              width = 500,
               collapsed = TRUE,
               sidebarMenu(
                   id = "sidebar",
@@ -40,7 +41,8 @@ body <- dashboardBody(
           tags$head(
             tags$style(
               type="text/css",
-              ".datatables {font-size: 90%}"
+              ".datatables {font-size: 90%}
+              .main-header.logo {width: 300px}"
             )
           ),
   
@@ -74,7 +76,10 @@ body <- dashboardBody(
                             id = "tabbox_r1c1",
                             width = 12,
                             tabPanel("Seletion-1", DT::dataTableOutput("table_sele_1")),
-                            tabPanel("Seletion-2", DT::dataTableOutput("table_sele_2"))
+                            tabPanel("Seletion-2", 
+                                     actionButton("btnX", label = "Button",
+                                                  style = "width: 120px; margin-bottom: 12px; font-weight: bold"),
+                                     DT::dataTableOutput("table_sele_2"))
                           )
                       )
 
