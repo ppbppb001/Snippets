@@ -1,7 +1,9 @@
 library(shiny)
 library(shinydashboard)
 library(DT)
+library(shinybusy)
 # library(shinydashboardPlus)
+
 library(ggplot2)
 library(visNetwork)
 library(igraph)
@@ -13,8 +15,9 @@ data("iris")
 selectedRowsTab1 <- NULL
 selectedRowsTab2 <- as.integer(c(1,2))
 
-dfRaw = read.csv('IER_simu_data1.csv', header=T, stringsAsFactors = F)
-dfSel = dfRaw[,c(1,2)]
+dfRaw <- read.csv('IER_simu_data1.csv', header=T, stringsAsFactors = F)
+dfSel <- dfRaw[1,c(1,2)]
+dfSel <- dfSel[-1,]
 
 dfSimi <- read.csv('IER_simi_attrib.csv', header=T, stringsAsFactors = F)
 
@@ -49,6 +52,10 @@ body <- dashboardBody(
             )
           ),
   
+          add_busy_bar(timeout =  1000, color = "yellow", height = "8px"),
+          add_busy_spinner(timeout = 1000, spin = "fading-circle",
+                           position = "top-left", color = "yellow"),
+          
           tabItems(
             
             # Tab content [functiona]:
@@ -62,8 +69,11 @@ body <- dashboardBody(
                       
                       box(
                           width = 12,
-                          id = "panel_c1r1",
-                          title = "Selection", status = "primary", solidHeader = TRUE,
+                          id = "panel_selection",
+                          # title = "Selection", 
+                          title = textOutput('title_panel_selection'),
+                          status = "primary", 
+                          solidHeader = TRUE,
                           # collapsible = TRUE,
                           style = "padding: 8px; margin: 0px; height: 90vh; background-color: #fafafa",
                           
@@ -78,10 +88,11 @@ body <- dashboardBody(
                             title = "Similarity",
                             id = "tabbox_r1c1",
                             width = 12,
-                            tabPanel("Seletion-1", DT::dataTableOutput("table_sele_1")),
-                            tabPanel("Seletion-2", 
+                            tabPanel("Seletion-1", 
                                      actionButton("btnSearch", label = "Search",
                                                   style = "width: 120px; margin-bottom: 12px; font-weight: bold"),
+                                     DT::dataTableOutput("table_sele_1")),
+                            tabPanel("Seletion-2", 
                                      DT::dataTableOutput("table_sele_2"))
                           )
                       )
@@ -94,8 +105,11 @@ body <- dashboardBody(
                       
                       box(
                         width = 12,
-                        id = "panel_c2r1",
-                        title = "Output", status = "success", solidHeader = TRUE,
+                        id = "panel_plot",
+                        # title = "Output", 
+                        title = textOutput("title_panel_plot"),
+                        status = "success", 
+                        solidHeader = TRUE,
                         # collapsible = TRUE,
                         style = "padding: 8px; margin: 0px; height: 90vh; background-color: #fafafa",
                         
@@ -156,6 +170,7 @@ server <- function(input, output, session) {
 
   
   # [Box_Selection] ###############
+  output$title_panel_selection <- renderText({"Selection"})
   
   output$table_sele_1 <- DT::renderDataTable({
     DT::datatable(dfSel, options = list(pageLength = 15))
@@ -170,13 +185,32 @@ server <- function(input, output, session) {
   proxyC1T1 <- DT::dataTableProxy("table_sele_1")
   proxyC1T2 <- DT::dataTableProxy("table_sele_2")
   
-  observeEvent(input$btnSelectReset, {
-    proxyC1T1 %>% selectRows(NULL)
-    proxyC1T2 %>% selectRows(NULL)
+  # [Button_Search]:
+  observeEvent(input$btnSearch, {
+    
+    ### Simulate running time of calling a function: ###
+    Sys.sleep(5)
+    
+    dfSel <- dfRaw[,c(1,2)]  
+    output$table_sele_1 <- DT::renderDataTable({
+      DT::datatable(dfSel, options = list(pageLength = 15))
+    })    
+    
+    output$title_panel_selection <- renderText("Selection - SQL queries OK!")
   })
   
-
+  # [Button_Reset_Selection]:
+  observeEvent(input$btnSelectReset, {
+    proxyC1T1 %>% selectRows(NULL)
+    # selectRows(proxyC1T1, NULL)
+    proxyC1T2 %>% selectRows(NULL)
+    # selectRows(proxyC1T2, NULL)
+  })
+  
+  
+  
   # [Box_Plot] ###############
+  output$title_panel_plot <- renderText({"Plot"})
   
   observeEvent(input$btnPlot,{
     selectedRowsTab1 <- input$table_sele_1_rows_selected
