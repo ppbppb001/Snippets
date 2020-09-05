@@ -173,6 +173,9 @@ server <- function(input, output, session) {
   # [Box_Plot] ###############
   
   observeEvent(input$btnPlot,{
+    selectedSrcRows <- input$table_sele_1_rows_selected
+    cat("[",selectedSrcRows,"]")
+    
     output$plot_1 <- renderPlot({
       g <- make_ring(10)
       plot.igraph(g, layout=layout_with_kk, vertex.color="green")
