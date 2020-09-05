@@ -10,7 +10,8 @@ setwd('D:\\User\\StudyAndTest\\R\\Shiny')
 
 data("iris")
 
-selectedSrcRows <- NULL
+selectedRowsTab1 <- NULL
+selectedRowsTab2 <- NULL
 
 dfRaw = read.csv('IER_simu_data1.csv')
 dfSel = dfRaw[,c(1,2)]
@@ -173,8 +174,10 @@ server <- function(input, output, session) {
   # [Box_Plot] ###############
   
   observeEvent(input$btnPlot,{
-    selectedSrcRows <- input$table_sele_1_rows_selected
-    cat("[",selectedSrcRows,"]")
+    selectedRowsTab1 <- input$table_sele_1_rows_selected
+    selectedRowsTab2 <- input$table_sele_2_rows_selected
+    cat("[1:",selectedRowsTab1,"]")
+    cat("[2:",selectedRowsTab2,"]")
     
     output$plot_1 <- renderPlot({
       g <- make_ring(10)
