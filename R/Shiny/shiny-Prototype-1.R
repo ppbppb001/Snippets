@@ -178,7 +178,7 @@ server <- function(input, output, session) {
   
   output$table_sele_2 <- DT::renderDataTable({
     DT::datatable(dfSimi, 
-                  options = list(pageLength = 15),
+                  options = list(pageLength = 15, stateSave = TRUE),
                   selection = list(mode = 'multiple', selected = selectedRowsTab2))
   })
   
@@ -187,9 +187,17 @@ server <- function(input, output, session) {
   
   # [Button_Search]:
   observeEvent(input$btnSearch, {
-    
     ### Simulate running time of calling a function: ###
-    Sys.sleep(5)
+    Sys.sleep(1)
+    
+    if (length(input$table_sele_1_rows_current) > 0){
+      selectedRowsTab1 <<- input$table_sele_1_rows_selected
+    }
+    cat("[1:",selectedRowsTab1,"]")
+    if (length(input$table_sele_2_rows_current) > 0){
+      selectedRowsTab2 <<- input$table_sele_2_rows_selected
+    }
+    cat("[2:",selectedRowsTab2,"]")
     
     dfSel <- dfRaw[,c(1,2)]  
     output$table_sele_1 <- DT::renderDataTable({
@@ -213,10 +221,6 @@ server <- function(input, output, session) {
   output$title_panel_plot <- renderText({"Plot"})
   
   observeEvent(input$btnPlot,{
-    selectedRowsTab1 <- input$table_sele_1_rows_selected
-    selectedRowsTab2 <- input$table_sele_2_rows_selected
-    cat("[1:",selectedRowsTab1,"]")
-    cat("[2:",selectedRowsTab2,"]")
     
     output$plot_1 <- renderPlot({
       g <- make_ring(10)
