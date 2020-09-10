@@ -44,14 +44,17 @@ sidebar <- dashboardSidebar(
 ## Body content:
 body <- dashboardBody(
   
+          # Customised JS and CSS:
           tags$head(
+            HTML('<script src="shiny-prototype-1.js"></script>'),
+            # HTML('<link type="text/css" rel="stylesheet" href="shiny-prototype-1.css">'),
             tags$style(
               type="text/css",
               ".datatables {font-size: 90%}
               .main-header.logo {width: 300px}"
             )
           ),
-  
+
           add_busy_bar(timeout =  1000, color = "yellow", height = "8px"),
           add_busy_spinner(timeout = 1000, spin = "fading-circle",
                            position = "top-left", color = "yellow"),
@@ -166,14 +169,29 @@ ui <- dashboardPage(header = header,
 
 # SERVER -------------------------------------------------
 
-server <- function(input, output, session) {
+messagebox <- function(title="Notification", msg1="", msg2="") {
+  showModal(modalDialog(
+    title = title,
+    div(msg1),
+    div(msg2),
+    footer = tagList(
+      actionButton("btnMessageBoxOK","OK", width = 160)
+    ),
+    easyClose = FALSE
+  ))
+}
 
+
+server <- function(input, output, session) {
+  cat('\n###Server Start###\n')
   
   # [Box_Selection] ###############
   output$title_panel_selection <- renderText({"Selection"})
   
   output$table_sele_1 <- DT::renderDataTable({
-    DT::datatable(dfSel, options = list(pageLength = 15))
+    DT::datatable(dfSel, 
+                  options = list(pageLength = 15),
+                  selection = 'single')
   })
   
   output$table_sele_2 <- DT::renderDataTable({
@@ -187,28 +205,20 @@ server <- function(input, output, session) {
   
   # [Button_Search]:
   observeEvent(input$btnSearch, {
+    cat("\n#btnSearch:")
     ### Simulate running time of calling a function: ###
     Sys.sleep(1)
     
-    if (length(input$table_sele_1_rows_current) > 0){
-      selectedRowsTab1 <<- input$table_sele_1_rows_selected
-    }
-    cat("[1:",selectedRowsTab1,"]")
-    if (length(input$table_sele_2_rows_current) > 0){
-      selectedRowsTab2 <<- input$table_sele_2_rows_selected
-    }
-    cat("[2:",selectedRowsTab2,"]")
-    
-    dfSel <- dfRaw[,c(1,2)]  
+    dfSel <<- dfRaw[,c(1,2)]  
     output$table_sele_1 <- DT::renderDataTable({
       DT::datatable(dfSel, options = list(pageLength = 15))
     })    
     
-    output$title_panel_selection <- renderText("Selection - SQL queries OK!")
   })
   
   # [Button_Reset_Selection]:
   observeEvent(input$btnSelectReset, {
+    cat("\n#btnSelectReset:")
     proxyC1T1 %>% selectRows(NULL)
     # selectRows(proxyC1T1, NULL)
     proxyC1T2 %>% selectRows(NULL)
@@ -221,6 +231,26 @@ server <- function(input, output, session) {
   output$title_panel_plot <- renderText({"Plot"})
   
   observeEvent(input$btnPlot,{
+    cat("\n#btnPlot:")
+    if (length(input$table_sele_1_rows_current) > 0){
+      selectedRowsTab1 <<- input$table_sele_1_rows_selected
+      cat("\n$selectedRowsTab1=",selectedRowsTab1)
+    }
+    if (length(input$table_sele_2_rows_current) > 0){
+      selectedRowsTab2 <<- input$table_sele_2_rows_selected
+      cat("\n$selectedRowsTab2=",selectedRowsTab2)
+    }
+    
+    if (is.null(selectedRowsTab1))
+    {
+      output$title_panel_selection <- renderText("Selection")
+      messagebox("Notification","Error!","No selection is valid")
+    }
+    else
+    {
+      output$title_panel_selection <- renderText(paste0("Selection - ", length(selectedRowsTab1)))
+    }
+    
     
     output$plot_1 <- renderPlot({
       g <- make_ring(10)
@@ -237,11 +267,16 @@ server <- function(input, output, session) {
   
   
   
+
+  # [Misc Events] ###############  
+  observeEvent(input$btnMessageBoxOK,{
+    removeModal()
+  })  
   
 
-  # Stop server after brower closed
+  # Stop server after brower closed ################
   session$onSessionEnded(function() {
-    stopApp(message("Shiny App Stopped!"))
+    stopApp(message("\n\nShiny App Stopped!\n"))
   })
   
 }
