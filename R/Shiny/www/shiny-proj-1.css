@@ -1,0 +1,54 @@
+.alignLeft {
+	dispaly: block;
+	float: left;}
+	
+.alignRight {
+	display: block;
+	float: right;
+}
+
+.alignCenter {
+	display: block;
+	margin: 0 auto;
+}
+	
+.displayShow {
+	visibility: visible;
+	
+}
+
+.displayHide {
+	visibility: hidden;
+}
+
+.colorDefault {
+	color: initial;
+}
+
+.colorGreen {
+	color: green;
+}
+
+.colorBlue {
+	color: blue;
+}
+
+.colorRed {
+	color: red;
+}
+
+.bgDefault {
+	background-color: transparent;
+}
+
+.bgGreen {
+	background-color: green;
+}
+
+.bgBlue {
+	background-color: blue;
+}
+
+.bgRed {
+	background-color: red;
+}
