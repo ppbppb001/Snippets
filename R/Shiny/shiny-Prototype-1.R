@@ -46,13 +46,34 @@ body <- dashboardBody(
   
           # Customised JS and CSS:
           tags$head(
-            HTML('<script src="shiny-prototype-1.js"></script>'),
+            # HTML('<script src="shiny-prototype-1.js"></script>'),
             # HTML('<link type="text/css" rel="stylesheet" href="shiny-prototype-1.css">'),
+            
+            HTML(
+              '<script>
+              window.addEventListener("beforeunload", (event) => {
+	              // Cancel the event as stated by the standard.
+                event.preventDefault();
+                // Chrome requires returnValue to be set.
+                event.returnValue = "Hello!";
+              });
+              /* Disable F5 key */
+              function maskF5(e) { 
+	              if ((e.which || e.keyCode) == 116) {
+		              alert("F5 key is masked to prevent reloading the page.")
+                  e.preventDefault()
+	              } 
+              };
+              $(document).on("keydown", maskF5);                        
+              </script>'
+            ),
+            
             tags$style(
               type="text/css",
               ".datatables {font-size: 90%}
               .main-header.logo {width: 300px}"
             )
+            
           ),
 
           add_busy_bar(timeout =  1000, color = "yellow", height = "8px"),
@@ -185,36 +206,76 @@ messagebox <- function(title="Notification", msg1="", msg2="") {
 server <- function(input, output, session) {
   cat('\n###Server Start###\n')
   
-  # [Box_Selection] ###############
-  output$title_panel_selection <- renderText({"Selection"})
-  
+  # [Reactive Values] ################
+  data_reactive <- reactiveValues(
+    title_sele = "Selection",
+    title_plot = "Plot",
+    sele = dfSel,
+    simi = dfSimi,
+    plot_ring = NULL
+  )
+
+  # [Data Tables] ####################  
   output$table_sele_1 <- DT::renderDataTable({
-    DT::datatable(dfSel, 
+    DT::datatable(data_reactive$sele, 
                   options = list(pageLength = 15),
                   selection = 'single')
   })
   
   output$table_sele_2 <- DT::renderDataTable({
-    DT::datatable(dfSimi, 
+    DT::datatable(data_reactive$simi, 
                   options = list(pageLength = 15, stateSave = TRUE),
                   selection = list(mode = 'multiple', selected = selectedRowsTab2))
+  })
+  
+  output$table_detail_1 <- DT::renderDataTable({
+    DT::datatable(data_reactive$sele, options = list(pageLength = 3))
   })
   
   proxyC1T1 <- DT::dataTableProxy("table_sele_1")
   proxyC1T2 <- DT::dataTableProxy("table_sele_2")
   
+  
+  # [Titles] ##########################
+  output$title_panel_selection <- renderText({
+    data_reactive$title_sele
+  })
+  
+  output$title_panel_plot <- renderText({
+    data_reactive$title_plot
+  })
+  
+  
+  # [Plots] #######################
+  output$plot_1 <- renderPlot({
+    if (is.null(data_reactive$plot_ring) == FALSE) {
+      g <- make_ring(data_reactive$plot_ring * 3)
+      plot.igraph(g, layout=layout_with_kk, vertex.color="green")
+    }
+  })
+  
+  output$plot_2 <- renderPlot({
+    if (is.null(data_reactive$plot_ring) == FALSE) {
+      g <- make_ring(data_reactive$plot_ring * 4)
+      plot.igraph(g, layout=layout_with_kk, vertex.color="pink")
+    }
+  })
+  
+  
+  # [Box_Selection] ###############
+  
   # [Button_Search]:
   observeEvent(input$btnSearch, {
     cat("\n#btnSearch:")
+    
     ### Simulate running time of calling a function: ###
     Sys.sleep(1)
-    
-    dfSel <<- dfRaw[,c(1,2)]  
-    output$table_sele_1 <- DT::renderDataTable({
-      DT::datatable(dfSel, options = list(pageLength = 15))
-    })    
-    
+
+    dfSel <<- dfRaw[,c(1,2)]
+    data_reactive$sele <- dfSel
   })
+  
+  
   
   # [Button_Reset_Selection]:
   observeEvent(input$btnSelectReset, {
@@ -228,7 +289,6 @@ server <- function(input, output, session) {
   
   
   # [Box_Plot] ###############
-  output$title_panel_plot <- renderText({"Plot"})
   
   observeEvent(input$btnPlot,{
     cat("\n#btnPlot:")
@@ -243,27 +303,21 @@ server <- function(input, output, session) {
     
     if (is.null(selectedRowsTab1))
     {
-      output$title_panel_selection <- renderText("Selection")
+      data_reactive$title_sele <- "Selection"
       messagebox("Notification","Error!","No selection is valid")
     }
     else
     {
-      output$title_panel_selection <- renderText(paste0("Selection - ", length(selectedRowsTab1)))
+      data_reactive$title_sele <- paste0("Selection - ", length(selectedRowsTab1))
+      data_reactive$plot_ring <- selectedRowsTab1
+      data_reactive$title_plot <- paste0("Plot - ",isolate(data_reactive$plot_ring))
     }
     
-    
-    output$plot_1 <- renderPlot({
-      g <- make_ring(10)
-      plot.igraph(g, layout=layout_with_kk, vertex.color="green")
-    })
   })
   
   
   # [Box_Details] ###############
   
-  output$table_detail_1 <- DT::renderDataTable({
-    DT::datatable(dfSel, options = list(pageLength = 3))
-  })
   
   
   
