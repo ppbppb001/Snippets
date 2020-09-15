@@ -8,18 +8,13 @@ library(ggplot2)
 library(visNetwork)
 library(igraph)
 
+
+SERVER_MODE <- FALSE
+
 setwd('D:\\User\\StudyAndTest\\R\\Shiny')
 
 data("iris")
 
-selectedRowsTab1 <- NULL
-selectedRowsTab2 <- as.integer(c(1,2))
-
-dfRaw <- read.csv('IER_simu_data1.csv', header=T, stringsAsFactors = F)
-dfSel <- dfRaw[1,c(1,2)]
-dfSel <- dfSel[-1,]
-
-dfSimi <- read.csv('IER_simi_attrib.csv', header=T, stringsAsFactors = F)
 
 
 
@@ -58,13 +53,13 @@ body <- dashboardBody(
                 event.returnValue = "Hello!";
               });
               /* Disable F5 key */
-              function maskF5(e) { 
+              function maskF5(e) {
 	              if ((e.which || e.keyCode) == 116) {
 		              alert("F5 key is masked to prevent reloading the page.")
                   e.preventDefault()
-	              } 
+	              }
               };
-              $(document).on("keydown", maskF5);                        
+              $(document).on("keydown", maskF5);
               </script>'
             ),
             
@@ -204,7 +199,20 @@ messagebox <- function(title="Notification", msg1="", msg2="") {
 
 
 server <- function(input, output, session) {
-  cat('\n###Server Start###\n')
+  cat('\n### Start a session: token = <',session$token,'> ###')
+  
+  
+  # [Initialization] ##############
+  cat('\n#Initialize local varibles')
+  selectedRowsTab1 <- NULL
+  selectedRowsTab2 <- as.integer(c(1,2))
+  
+  dfRaw <- read.csv('IER_simu_data1.csv', header=T, stringsAsFactors = F)
+  dfSel <- dfRaw[1,c(1,2)]
+  dfSel <- dfSel[-1,]
+  
+  dfSimi <- read.csv('IER_simi_attrib.csv', header=T, stringsAsFactors = F)
+  
   
   # [Reactive Values] ################
   data_reactive <- reactiveValues(
@@ -308,7 +316,7 @@ server <- function(input, output, session) {
     }
     else
     {
-      data_reactive$title_sele <- paste0("Selection - ", length(selectedRowsTab1))
+      data_reactive$title_sele <- paste0("Selection - ", selectedRowsTab1)
       data_reactive$plot_ring <- selectedRowsTab1
       data_reactive$title_plot <- paste0("Plot - ",isolate(data_reactive$plot_ring))
     }
@@ -330,7 +338,10 @@ server <- function(input, output, session) {
 
   # Stop server after brower closed ################
   session$onSessionEnded(function() {
-    stopApp(message("\n\nShiny App Stopped!\n"))
+    cat('\n### End a session, token = <',session$token,'>')
+    if (SERVER_MODE == FALSE) {
+      stopApp(message("\n\nShiny App Stopped!\n"))
+    }
   })
   
 }
