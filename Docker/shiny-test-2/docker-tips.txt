@@ -1,0 +1,36 @@
+# Where does docker save the images? or where does docker server/VM locate?
+Docker Server/VM -> [Windows-SysDrv]:\Users\USER\AppData\Docker\wsl\distro
+Docker Images -> [Windows-SysDrv]:\Users\USER\AppData\Docker\wsl\data
+
+
+# Command to build image
+docker build -t shiny-test-2-rbase -f r-base.3.6.3/Dockerfile .
+docker build -t shiny-test-2-rbase:20201102 -f r-base.3.6.3/Dockerfile .
+
+# Command to run container
+docker run --rm -p 0.0.0.0:7777:7777 shiny-test-2-rbase
+docker run --rm -p 0.0.0.0:7778:7777 shiny-test-2-rbase
+
+# Command to save/export a image
+docker save -o shiny-test-2-rbase-image.tar shiny-test-2-rbase
+
+# Command to load/import a image
+docker load -i shiny-test-2-rbase-image.tar
+
+# Command to list images
+docker image ls
+docker images
+
+# Command to remove a image
+docker --rmi -f <IMAGE_NAME or IMAGE_ID>
+
+# Command to list containers
+docker container ls
+
+# Command to kill a running container
+docker kill <CONTAINER_NAME or CONTAINER_ID)
+
+
+
+
+
