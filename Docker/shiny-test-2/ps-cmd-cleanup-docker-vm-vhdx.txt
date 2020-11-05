@@ -1,1 +1,0 @@
-Mount-VHD -Path ext4.vhdx -ReadOnly -Passthru | Optimize-VHD -Mode Quick -Passthru | Optimize-VHD -Mode Full -Passthru | Optimize-VHD -Mode Full -Passthru | Dismount-VHD -Passthru | Optimize-VHD -Mode Quick -Passthru | Optimize-VHD -Mode Full
